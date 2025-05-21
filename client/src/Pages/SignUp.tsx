@@ -1,10 +1,9 @@
-import Header from "../Components/Header";
+// import Header from "../Components/Header";
 import SignUp from "../Components/SignUp";
 
 const signUpPage = () => {
     return (
         <>
-            <Header />
             <SignUp />
         </>
     );
