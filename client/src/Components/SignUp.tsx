@@ -3,6 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Select from "react-select";
+import { signUpApi } from "../Api/userApi";
 
 // SignUp schema validation
 const signUpSchema = z
@@ -60,6 +61,7 @@ const SignUp: React.FC = () => {
     ];
 
     const onSubmit = async (data: SignUpFormData) => {
+        await signUpApi(data);
         // api logic to be added here with ui and validation completed
     };
 
