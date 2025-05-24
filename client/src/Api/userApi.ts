@@ -1,9 +1,9 @@
-import axios from "axios";
 import type { SignUp } from "../Interfaces/userInterfaces";
+import axiosUser from "../Axios/Interceptor";
 
 const signUpApi = async (data: SignUp) => {
     try {
-        const response = await axios.post("/sign-up", data);
+        const response = await axiosUser.post("/sign-up", data);
 
         return {
             success: true,
@@ -21,7 +21,7 @@ const signUpApi = async (data: SignUp) => {
 
 const signInApi = async (data: SignUp) => {
     try {
-        const response = await axios.post("/sign-in", data);
+        const response = await axiosUser.post("/sign-in", data);
 
         return {
             success: true,
