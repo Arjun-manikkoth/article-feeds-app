@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { signInApi } from "../Api/userApi";
 
 // SignIn schema validation
 const signInSchema = z.object({
@@ -29,8 +30,7 @@ const SignIn: React.FC = () => {
     });
 
     const onSubmit = async (data: SignInFormData) => {
-        // api logic to be added here with ui and validation completed
-        console.log(data);
+        await signInApi(data);
     };
 
     return (
