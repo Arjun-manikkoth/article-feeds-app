@@ -5,4 +5,5 @@ import { IBaseRepository } from "../base/base.repository.interface";
 export default interface IUserRepository extends IBaseRepository<IUser> {
     insertUser(userData: ISignUp): Promise<void>;
     findUserByEmail(email: string): Promise<IUser | null>;
+    findUserByPhone(phone: string): Promise<IUser | null>;
 }

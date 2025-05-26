@@ -14,7 +14,7 @@ const signUpSchema = z
         phone: z
             .string()
             .refine(
-                (val) => !val || /^\d{10}$/.test(val),
+                (val) => !val || /^[6-9]\d{9}$/.test(val),
                 "Please enter a valid 10-digit phone number"
             ),
         interests: z.array(z.string()).min(1, "Select at least one interest"),

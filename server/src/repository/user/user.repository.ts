@@ -37,5 +37,16 @@ class UserRepository extends BaseRepository<IUser> implements IUserRepository {
             throw new Error("Failed to find account");
         }
     }
+
+    //find user with phone
+    async findUserByPhone(phone: string): Promise<IUser | null> {
+        try {
+            return await this.model.findOne({ phone: phone });
+        } catch (error: any) {
+            console.log(error.message);
+
+            throw new Error("Failed to find account");
+        }
+    }
 }
 export default UserRepository;

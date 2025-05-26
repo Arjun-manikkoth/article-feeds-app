@@ -1,3 +1,8 @@
+interface IServiceResponse {
+    message: string;
+    statusCode: number;
+}
+
 interface ISignUp {
     firstName: string;
     lastName: string;
@@ -8,13 +13,17 @@ interface ISignUp {
     interests: string[];
 }
 
-interface IServiceResponse {
-    message: string;
-    statusCode: number;
+interface ISignIn {
+    loginId: string;
+    password: string;
+}
+
+interface ISignInResponse extends IServiceResponse {
+    data: null | { accessToken: string; refreshToken: string };
 }
 
 interface ISignUpResponse extends IServiceResponse {
     data: ISignUp | null;
 }
 
-export { ISignUp, ISignUpResponse };
+export { ISignUp, ISignIn, ISignUpResponse, ISignInResponse };

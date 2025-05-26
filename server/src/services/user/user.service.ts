@@ -1,9 +1,16 @@
 import IUserService from "./user.service.interface";
-import { ISignUp, ISignUpResponse } from "../../interfaces/user.interface";
+import {
+    ISignUp,
+    ISignIn,
+    ISignInResponse,
+    ISignUpResponse,
+} from "../../interfaces/user.interface";
 import IUserRepository from "../../repository/user/user.repository.interface";
-import { hashPassword } from "../../utils/hash.password";
+import { hashPassword, comparePasswords } from "../../utils/hash.password";
+import { generateTokens } from "../../utils/generate.tokens";
 import { AuthMessages } from "../../constants/messages";
 import { HTTP_STATUS } from "../../constants/status.code";
+import { isEmail } from "../../utils/regex.check";
 
 class UserService implements IUserService {
     constructor(private userRepository: IUserRepository) {}
@@ -11,7 +18,6 @@ class UserService implements IUserService {
     //creates a new user document without duplicates
     async createUser(userData: ISignUp): Promise<ISignUpResponse> {
         try {
-            console.log(userData, "data at services");
             const exists = await this.userRepository.findUserByEmail(userData.email);
 
             if (!exists) {
@@ -25,17 +31,60 @@ class UserService implements IUserService {
                     message: AuthMessages.SIGN_UP_SUCCESS,
                     data: null,
                 };
-            } else {
-                return {
-                    statusCode: HTTP_STATUS.CONFLICT,
-                    message: AuthMessages.ACCOUNT_EXISTS,
-                    data: null,
-                };
             }
+            return {
+                statusCode: HTTP_STATUS.CONFLICT,
+                message: AuthMessages.ACCOUNT_EXISTS,
+                data: null,
+            };
         } catch (error: any) {
             console.log(error.message);
 
             throw new Error(error);
+        }
+    }
+
+    //verify credentials and generates tokens
+    async authenticateUser(userData: ISignIn): Promise<ISignInResponse> {
+        try {
+            const inputType: "email" | "phone" = isEmail(userData.loginId) ? "email" : "phone";
+
+            let exists =
+                inputType === "email"
+                    ? await this.userRepository.findUserByEmail(userData.loginId)
+                    : await this.userRepository.findUserByPhone(userData.loginId);
+
+            if (!exists) {
+                return {
+                    statusCode: HTTP_STATUS.NOT_FOUND,
+                    message: AuthMessages.ACCOUNT_DOES_NOT_EXISTS,
+                    data: null,
+                };
+            }
+
+            const passwordStatus = await comparePasswords(userData.password, exists.password);
+
+            if (!passwordStatus) {
+                return {
+                    statusCode: HTTP_STATUS.UNAUTHORIZED,
+                    message: AuthMessages.INVALID_CREDENTIALS,
+                    data: null,
+                };
+            }
+
+            const tokens = generateTokens(exists._id.toString(), exists.email, "user");
+
+            return {
+                statusCode: HTTP_STATUS.OK,
+                message: AuthMessages.SIGN_IN_SUCCESS,
+                data: {
+                    accessToken: tokens.accessToken,
+                    refreshToken: tokens.refreshToken,
+                },
+            };
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to sign in");
         }
     }
 }
