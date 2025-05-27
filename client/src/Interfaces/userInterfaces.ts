@@ -25,4 +25,10 @@ export interface IUser {
     preference: string[];
 }
 
+export interface IEditProfile {
+    firstName: string;
+    lastName: string;
+    preference: string[];
+}
+
 export type { SignUp, SignIn, IUser };

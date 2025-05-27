@@ -4,6 +4,7 @@ import {
     ISignIn,
     ISignInResponse,
     ISignUpResponse,
+    IEditProfile,
 } from "../../interfaces/user.interface";
 import { IUser } from "../../models/user.model";
 import IUserRepository from "../../repository/user/user.repository.interface";
@@ -104,7 +105,16 @@ class UserService implements IUserService {
             }
         } catch (error: any) {
             console.log(error.message);
-            return null;
+            throw new Error("Failed to fetch profile data");
+        }
+    }
+
+    async editProfile(id: string, data: IEditProfile): Promise<boolean> {
+        try {
+            return await this.userRepository.updateUserWithId(id, data);
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to update profile data");
         }
     }
 }

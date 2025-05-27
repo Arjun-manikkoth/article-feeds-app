@@ -10,6 +10,8 @@ export const AuthMessages = {
 export const ProfileMessages = {
     PROFILE_FETCH_SUCCESS: "Fetched profile successfully",
     PROFILE_FETCH_FAILURE: "Failed to fetch profile details",
+    UPDATE_PROFILE_SUCCESS: "Updated profile successfully",
+    UPDATE_PROFILE_FAILURE: "Failed to update profile details",
 };
 
 export const GeneralMessages = {

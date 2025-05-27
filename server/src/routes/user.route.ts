@@ -19,6 +19,9 @@ userRoute.route("/sign-in").post((req, res) => userController.signIn(req, res));
 
 userRoute.route("/sign-out").get((req, res) => userController.signOut(req, res));
 
-userRoute.route("/:id").get((req, res) => userController.getProfile(req, res));
+userRoute
+    .route("/:id")
+    .get((req, res) => userController.getProfile(req, res))
+    .patch((req, res) => userController.updateProfile(req, res));
 
 export default userRoute;

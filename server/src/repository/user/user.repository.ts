@@ -1,4 +1,4 @@
-import { ISignUp } from "../../interfaces/user.interface";
+import { IEditProfile, ISignUp } from "../../interfaces/user.interface";
 import { IUser } from "../../models/user.model";
 import { BaseRepository } from "../base/base.repository";
 import IUserRepository from "./user.repository.interface";
@@ -58,6 +58,16 @@ class UserRepository extends BaseRepository<IUser> implements IUserRepository {
         } catch (error: any) {
             console.log(error.message);
             throw new Error("Failed to fetch profile data");
+        }
+    }
+
+    //update user profile
+    async updateUserWithId(id: string, data: IEditProfile): Promise<boolean> {
+        try {
+            return await this.update(id, data);
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to update profile data");
         }
     }
 }

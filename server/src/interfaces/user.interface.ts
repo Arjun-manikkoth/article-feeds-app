@@ -3,6 +3,12 @@ interface IServiceResponse {
     statusCode: number;
 }
 
+interface IEditProfile {
+    first_name: string;
+    last_name: string;
+    preference: string[];
+}
+
 interface ISignUp {
     firstName: string;
     lastName: string;
@@ -26,4 +32,4 @@ interface ISignUpResponse extends IServiceResponse {
     data: ISignUp | null;
 }
 
-export { ISignUp, ISignIn, ISignUpResponse, ISignInResponse };
+export { ISignUp, ISignIn, ISignUpResponse, ISignInResponse, IEditProfile };

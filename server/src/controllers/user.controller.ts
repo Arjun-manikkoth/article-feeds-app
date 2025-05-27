@@ -1,8 +1,10 @@
+import { HTTP_STATUS } from "./../constants/status.code";
 import { Request, Response } from "express";
 import IUserService from "../services/user/user.service.interface";
-import { HTTP_STATUS } from "../constants/status.code";
 import { AuthMessages, GeneralMessages, ProfileMessages } from "../constants/messages";
 import { validateLoginId } from "../utils/regex.check";
+import { mapKeys, snakeCase } from "lodash-es";
+import { IEditProfile } from "../interfaces/user.interface";
 
 class UserController {
     constructor(private userService: IUserService) {}
@@ -183,7 +185,7 @@ class UserController {
                     data: status,
                 });
             } else {
-                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                res.status(HTTP_STATUS.NOT_FOUND).json({
                     success: false,
                     message: ProfileMessages.PROFILE_FETCH_FAILURE,
                     data: null,
@@ -191,6 +193,51 @@ class UserController {
             }
         } catch (error: any) {
             console.error(error.message);
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: GeneralMessages.INTERNAL_SERVER_ERROR,
+                data: null,
+            });
+        }
+    }
+
+    //update profile
+    async updateProfile(req: Request, res: Response): Promise<void> {
+        try {
+            if (
+                !req.body.firstName ||
+                !req.body.lastName ||
+                req.body.preferences?.length <= 0 ||
+                !req.params.id
+            ) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({
+                    success: false,
+                    message: GeneralMessages.MISSING_REQUIRED_FIELDS,
+                    data: null,
+                });
+                return;
+            }
+
+            const status = await this.userService.editProfile(
+                req.params.id,
+                mapKeys(req.body, (value, key) => snakeCase(key)) as IEditProfile
+            );
+
+            if (status) {
+                res.status(HTTP_STATUS.OK).json({
+                    success: true,
+                    message: ProfileMessages.UPDATE_PROFILE_SUCCESS,
+                    data: status,
+                });
+            } else {
+                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                    success: false,
+                    message: ProfileMessages.UPDATE_PROFILE_FAILURE,
+                    data: null,
+                });
+            }
+        } catch (error: any) {
+            console.log(error.message);
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
                 message: GeneralMessages.INTERNAL_SERVER_ERROR,

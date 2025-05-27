@@ -1,4 +1,4 @@
-import type { SignIn, SignUp } from "../Interfaces/userInterfaces";
+import type { IEditProfile, SignIn, SignUp } from "../Interfaces/userInterfaces";
 import axiosUser from "../Axios/Interceptor";
 import { isAxiosError } from "axios";
 
@@ -87,6 +87,35 @@ const fetchProfileApi = async (id: string) => {
     }
 };
 
+// updates user profile data
+const updateProfileApi = async (id: string | null, data: IEditProfile) => {
+    try {
+        const response = await axiosUser.patch(`/users/${id}`, data);
+
+        return {
+            success: true,
+            message: response.data.message || "Profile updated successfully",
+            data: response.data.data,
+        };
+    } catch (error: unknown) {
+        if (isAxiosError(error)) {
+            console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to update profile",
+                data: error.response?.data.data,
+            };
+        } else {
+            console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
+        }
+    }
+};
+
 //api logouts clears access and refresh tokens
 const logoutApi = async () => {
     try {
@@ -116,4 +145,4 @@ const logoutApi = async () => {
     }
 };
 
-export { signUpApi, signInApi, fetchProfileApi, logoutApi };
+export { signUpApi, signInApi, fetchProfileApi, updateProfileApi, logoutApi };

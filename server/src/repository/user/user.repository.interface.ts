@@ -1,4 +1,4 @@
-import { ISignUp } from "../../interfaces/user.interface";
+import { IEditProfile, ISignUp } from "../../interfaces/user.interface";
 import { IUser } from "../../models/user.model";
 import { IBaseRepository } from "../base/base.repository.interface";
 
@@ -7,4 +7,5 @@ export default interface IUserRepository extends IBaseRepository<IUser> {
     findUserByEmail(email: string): Promise<IUser | null>;
     findUserByPhone(phone: string): Promise<IUser | null>;
     getUserDataWithId(id: string): Promise<IUser | null>;
+    updateUserWithId(id: string, data: IEditProfile): Promise<boolean>;
 }

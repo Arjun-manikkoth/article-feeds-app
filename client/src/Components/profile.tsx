@@ -6,31 +6,22 @@ import { interests } from "../Constants/constant";
 import { useAuth } from "../Hooks/useAuth";
 import { z } from "zod";
 import type { IUser } from "../Interfaces/userInterfaces";
-import { fetchProfileApi } from "../Api/userApi";
+import { fetchProfileApi, updateProfileApi } from "../Api/userApi";
 import toast from "react-hot-toast";
 
 const profileSchema = z.object({
     firstName: z.string().min(1, "First name is required").max(50, "First name is too long"),
     lastName: z.string().min(1, "Last name is required").max(50, "Last name is too long"),
-    dateOfBirth: z.string().refine(
-        (val) => {
-            const date = new Date(val);
-            return !isNaN(date.getTime()) && date < new Date();
-        },
-        { message: "Invalid date of birth" }
-    ),
     preference: z.array(z.string()).min(1, "Select at least one preference"),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 const Profile: React.FC = () => {
-    const { loginId } = useAuth();
+    const { id, loginId } = useAuth();
     const [user, setUser] = useState<IUser | null>(null);
     const [isEditing, setEditing] = useState(false);
     const [isLoading, setLoading] = useState(true);
-
-    const { id } = useAuth();
 
     const {
         register,
@@ -43,7 +34,6 @@ const Profile: React.FC = () => {
         defaultValues: {
             firstName: "",
             lastName: "",
-            dateOfBirth: "",
             preference: [],
         },
     });
@@ -76,15 +66,15 @@ const Profile: React.FC = () => {
 
     const onSubmit = async (data: ProfileFormData) => {
         try {
-            // const updatedData = {
-            //     first_name: data.firstName,
-            //     last_name: data.lastName,
-            //     date_of_birth: new Date(data.dateOfBirth).toISOString(),
-            //     preference: data.preference,
-            // };
-            // setUser((prev) => (prev ? { ...prev, ...data } : null));
-            // setEditing(false);
-            // toast.success("Profile updated successfully");
+            const status = await updateProfileApi(id, data);
+
+            if (status.success) {
+                setUser((prev) => (prev ? { ...prev, ...data } : null));
+                setEditing(false);
+                toast.success("Profile updated successfully");
+            } else {
+                toast.error(status.message);
+            }
         } catch (err: unknown) {
             toast.error("Failed to update profile");
         }
@@ -221,24 +211,25 @@ const Profile: React.FC = () => {
                                     htmlFor="dateOfBirth"
                                     className="block text-base font-medium text-gray-400 mb-2"
                                 >
-                                    Date of Birth
+                                    Date of birth
                                 </label>
                                 <input
                                     type="date"
                                     id="dateOfBirth"
-                                    {...register("dateOfBirth")}
-                                    className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 transition-colors text-base"
-                                    aria-invalid={errors.dateOfBirth ? "true" : "false"}
-                                    aria-describedby="dateOfBirth-error"
+                                    readOnly
+                                    value={
+                                        user?.dateOfBirth &&
+                                        !isNaN(new Date(user.dateOfBirth).getTime())
+                                            ? new Date(user.dateOfBirth).toISOString().split("T")[0]
+                                            : ""
+                                    }
+                                    className="w-full p-3 bg-gray-700 text-gray-400 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 transition-colors text-base"
+                                    aria-describedby="dateOfBirth-info"
                                 />
-                                {errors.dateOfBirth && (
-                                    <span
-                                        id="dateOfBirth-error"
-                                        className="text-amber-600 text-sm mt-2 block"
-                                    >
-                                        {errors.dateOfBirth.message}
-                                    </span>
-                                )}
+
+                                <span id="phone-info" className="text-gray-500 text-sm mt-2 block">
+                                    Date of birth cannot be edited.
+                                </span>
                             </div>
 
                             <div>
@@ -372,7 +363,7 @@ const Profile: React.FC = () => {
                                 </div>
                                 <div className="bg-gray-900 p-4 sm:p-6 rounded-lg border border-gray-700">
                                     <p className="text-base text-gray-400">Date of Birth</p>
-                                    <p className="text-white text-lg sm:text-xl">
+                                    <p className="text-gray-400 text-lg sm:text-xl">
                                         {user?.dateOfBirth
                                             ? new Date(user.dateOfBirth).toLocaleDateString()
                                             : "Not set"}
