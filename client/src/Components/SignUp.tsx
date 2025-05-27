@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Select from "react-select";
 import { signUpApi } from "../Api/userApi";
+import { interests } from "../Constants/constant";
 
 // SignUp schema validation
 const signUpSchema = z
@@ -48,17 +49,6 @@ const SignUp: React.FC = () => {
             confirmPassword: "",
         },
     });
-
-    const interests = [
-        { value: "sports", label: "Sports" },
-        { value: "politics", label: "Politics" },
-        { value: "medical", label: "Medical" },
-        { value: "programming", label: "Programming" },
-        { value: "news", label: "News" },
-        { value: "health", label: "Health" },
-        { value: "fitness", label: "Fitness" },
-        { value: "tech", label: "Tech" },
-    ];
 
     const onSubmit = async (data: SignUpFormData) => {
         await signUpApi(data);

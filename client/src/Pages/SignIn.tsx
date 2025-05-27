@@ -1,10 +1,10 @@
 import SignIn from "../Components/SignIn";
 
-const signInPage = () => {
+const SignInPage = () => {
     return (
         <>
             <SignIn />
         </>
     );
 };
-export default signInPage;
+export default SignInPage;

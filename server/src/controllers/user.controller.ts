@@ -104,7 +104,7 @@ class UserController {
                     .json({
                         success: true,
                         message: response.message,
-                        data: null,
+                        data: { id: response.data.id },
                     });
             } else {
                 switch (response.statusCode) {

@@ -80,6 +80,7 @@ class UserService implements IUserService {
                 data: {
                     accessToken: tokens.accessToken,
                     refreshToken: tokens.refreshToken,
+                    id: exists._id.toString(),
                 },
             };
         } catch (error: any) {

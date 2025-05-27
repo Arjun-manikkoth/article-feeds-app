@@ -1,3 +1,4 @@
+import { IUser } from "./userInterfaces";
 interface SignUp {
     email: string;
     firstName: string;
@@ -14,4 +15,14 @@ interface SignIn {
     password: string;
 }
 
-export type { SignUp, SignIn };
+export interface IUser {
+    id?: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    dateOfBirth: string;
+    preference: string[];
+}
+
+export type { SignUp, SignIn, IUser };

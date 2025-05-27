@@ -19,7 +19,7 @@ interface ISignIn {
 }
 
 interface ISignInResponse extends IServiceResponse {
-    data: null | { accessToken: string; refreshToken: string };
+    data: null | { accessToken: string; refreshToken: string; id: string };
 }
 
 interface ISignUpResponse extends IServiceResponse {

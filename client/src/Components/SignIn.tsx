@@ -3,6 +3,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { signInApi } from "../Api/userApi";
+import toast from "react-hot-toast";
+import { useAppHelpers } from "../Hooks/useAppHelpers";
+import { setUser } from "../Redux/Slices/UserSlice";
 
 // SignIn schema validation
 const signInSchema = z.object({
@@ -29,8 +32,17 @@ const SignIn: React.FC = () => {
         },
     });
 
+    const { navigate, dispatch } = useAppHelpers();
+
     const onSubmit = async (data: SignInFormData) => {
-        await signInApi(data);
+        const status = await signInApi(data);
+
+        if (status?.success) {
+            dispatch(setUser({ id: status.data.id, loginId: status.data.loginId }));
+            navigate(`/articles`);
+        } else {
+            toast.error(status?.message);
+        }
     };
 
     return (
