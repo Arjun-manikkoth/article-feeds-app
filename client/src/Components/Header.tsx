@@ -21,7 +21,7 @@ const Header: React.FC = () => {
     };
 
     return (
-        <header className="bg-gray-900 text-white shadow-md">
+        <header className="bg-gray-900 text-white shadow-md fixed top-0 left-0 w-full z-50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
                 <div className="text-xl sm:text-2xl font-bold text-amber-600">BlogSpot</div>
                 <button
@@ -43,7 +43,7 @@ const Header: React.FC = () => {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 strokeWidth="2"
-                                d="M6 18L18 6M6 6l12 12"
+                                d="M6 18L18 12M6 6l12 12"
                             />
                         ) : (
                             <path
@@ -58,7 +58,7 @@ const Header: React.FC = () => {
                 <nav
                     className={`${
                         isMobileMenuOpen ? "block" : "hidden"
-                    } sm:flex sm:items-center sm:space-x-4 absolute sm:static top-16 left-0 w-full sm:w-auto bg-gray-900 sm:bg-transparent p-4 sm:p-0 z-50`}
+                    } sm:flex sm:items-center sm:space-x-4 absolute sm:static top-[64px] left-0 w-full sm:w-auto bg-gray-900 sm:bg-transparent p-4 sm:p-0 z-50`}
                     id="mobile-menu"
                 >
                     <div className="relative">
@@ -92,6 +92,16 @@ const Header: React.FC = () => {
                                 id="articles-menu"
                                 className="relative sm:absolute right-0 mt-2 w-full sm:w-48 max-w-[calc(100vw-2rem)] bg-gray-800 rounded-md shadow-lg z-50 border border-gray-700"
                             >
+                                <a
+                                    href="/articles"
+                                    className="block px-4 py-2 text-gray-200 hover:bg-gray-700 hover:text-amber-300 sm:rounded-b-md"
+                                    onClick={() => {
+                                        setArticlesOpen(false);
+                                        setMobileMenuOpen(false);
+                                    }}
+                                >
+                                    Home
+                                </a>
                                 <a
                                     href="/my-articles"
                                     className="block px-4 py-2 text-gray-200 hover:bg-gray-700 hover:text-amber-300 sm:rounded-t-md"
