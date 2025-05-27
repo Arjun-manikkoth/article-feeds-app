@@ -70,5 +70,15 @@ class UserRepository extends BaseRepository<IUser> implements IUserRepository {
             throw new Error("Failed to update profile data");
         }
     }
+
+    // updates document with new password
+    async updatePassword(id: string, password: string): Promise<boolean> {
+        try {
+            return await this.update(id, { password: password });
+        } catch (error: any) {
+            console.log(error.message);
+            return false;
+        }
+    }
 }
 export default UserRepository;

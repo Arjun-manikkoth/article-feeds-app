@@ -5,12 +5,14 @@ import {
     ISignInResponse,
     ISignUpResponse,
     IEditProfile,
+    IPasswordChange,
+    IGeneralResponse,
 } from "../../interfaces/user.interface";
 import { IUser } from "../../models/user.model";
 import IUserRepository from "../../repository/user/user.repository.interface";
 import { hashPassword, comparePasswords } from "../../utils/hash.password";
 import { generateTokens } from "../../utils/generate.tokens";
-import { AuthMessages } from "../../constants/messages";
+import { AuthMessages, PasswordMessages, ProfileMessages } from "../../constants/messages";
 import { HTTP_STATUS } from "../../constants/status.code";
 import { isEmail } from "../../utils/regex.check";
 import { camelCase, mapKeys } from "lodash-es";
@@ -115,6 +117,49 @@ class UserService implements IUserService {
         } catch (error: any) {
             console.log(error.message);
             throw new Error("Failed to update profile data");
+        }
+    }
+
+    //change password
+    async changePassword(id: string, data: IPasswordChange): Promise<IGeneralResponse> {
+        try {
+            const exists = await this.userRepository.getUserDataWithId(id);
+
+            if (!exists) {
+                return {
+                    message: ProfileMessages.PROFILE_FETCH_FAILURE,
+                    statusCode: HTTP_STATUS.NOT_FOUND,
+                    data: null,
+                };
+            }
+            const passwordStatus = await comparePasswords(data.password, exists.password);
+
+            if (!passwordStatus) {
+                return {
+                    message: PasswordMessages.PASSWORD_INVALID,
+                    statusCode: HTTP_STATUS.UNAUTHORIZED,
+                    data: null,
+                };
+            }
+
+            const hashedPassword = await hashPassword(data.newPassword);
+
+            const updateStatus = await this.userRepository.updatePassword(id, hashedPassword);
+
+            return updateStatus
+                ? {
+                      message: PasswordMessages.PASSWORD_UPDATE_SUCCESS,
+                      statusCode: HTTP_STATUS.OK,
+                      data: null,
+                  }
+                : {
+                      message: PasswordMessages.PASSWORD_UPDATE_FAILURE,
+                      statusCode: HTTP_STATUS.BAD_REQUEST,
+                      data: null,
+                  };
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to change password");
         }
     }
 }

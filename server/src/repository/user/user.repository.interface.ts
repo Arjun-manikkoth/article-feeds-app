@@ -8,4 +8,5 @@ export default interface IUserRepository extends IBaseRepository<IUser> {
     findUserByPhone(phone: string): Promise<IUser | null>;
     getUserDataWithId(id: string): Promise<IUser | null>;
     updateUserWithId(id: string, data: IEditProfile): Promise<boolean>;
+    updatePassword(id: string, password: string): Promise<boolean>;
 }

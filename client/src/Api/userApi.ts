@@ -1,4 +1,4 @@
-import type { IEditProfile, SignIn, SignUp } from "../Interfaces/userInterfaces";
+import type { IChangePassword, IEditProfile, SignIn, SignUp } from "../Interfaces/userInterfaces";
 import axiosUser from "../Axios/Interceptor";
 import { isAxiosError } from "axios";
 
@@ -116,6 +116,35 @@ const updateProfileApi = async (id: string | null, data: IEditProfile) => {
     }
 };
 
+// updates user profile data
+const updatePasswordApi = async (id: string | null, data: IChangePassword) => {
+    try {
+        const response = await axiosUser.patch(`/users/${id}/change-password`, data);
+
+        return {
+            success: true,
+            message: response.data.message || "Password updated successfully",
+            data: response.data.data,
+        };
+    } catch (error: unknown) {
+        if (isAxiosError(error)) {
+            console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to update password",
+                data: error.response?.data.data,
+            };
+        } else {
+            console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
+        }
+    }
+};
+
 //api logouts clears access and refresh tokens
 const logoutApi = async () => {
     try {
@@ -145,4 +174,4 @@ const logoutApi = async () => {
     }
 };
 
-export { signUpApi, signInApi, fetchProfileApi, updateProfileApi, logoutApi };
+export { signUpApi, signInApi, fetchProfileApi, updateProfileApi, updatePasswordApi, logoutApi };

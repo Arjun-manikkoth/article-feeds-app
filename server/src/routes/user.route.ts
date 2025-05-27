@@ -19,6 +19,14 @@ userRoute.route("/sign-in").post((req, res) => userController.signIn(req, res));
 
 userRoute.route("/sign-out").get((req, res) => userController.signOut(req, res));
 
+//-------------------------------------------------Password Routes---------------------------------------------
+
+userRoute
+    .route("/:id/change-password")
+    .patch((req, res) => userController.changePassword(req, res));
+
+//---------------------------------------------Profile Routes--------------------------------------------------
+
 userRoute
     .route("/:id")
     .get((req, res) => userController.getProfile(req, res))

@@ -14,6 +14,13 @@ export const ProfileMessages = {
     UPDATE_PROFILE_FAILURE: "Failed to update profile details",
 };
 
+export const PasswordMessages = {
+    PASSWORD_VERIFY_SUCCESS: "Password verified successfully",
+    PASSWORD_INVALID: "Invalid current password",
+    PASSWORD_UPDATE_SUCCESS: "Password changed successfully",
+    PASSWORD_UPDATE_FAILURE: "Failed to update password",
+};
+
 export const GeneralMessages = {
     MISSING_REQUIRED_FIELDS: "Some fields are missing or invalid",
     INTERNAL_SERVER_ERROR: "Internal server error",

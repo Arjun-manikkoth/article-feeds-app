@@ -4,6 +4,7 @@ import SignUpPage from "./Pages/SignUp";
 import SignInPage from "./Pages/SignIn";
 import HomePage from "./Pages/Home";
 import ProfilePage from "./Pages/Profile";
+import ChangePasswordPage from "./Pages/ChangePassword";
 import { AuthProtected } from "./Components/Protected/AuthProtected";
 import UserProtected from "./Components/Protected/UserProtected";
 
@@ -19,6 +20,7 @@ const App: React.FC = () => {
                     <Route Component={UserProtected}>
                         <Route path="/articles" Component={HomePage} />
                         <Route path={`/profile`} Component={ProfilePage} />
+                        <Route path={`/change-password`} Component={ChangePasswordPage} />
                     </Route>
                 </Routes>
             </Router>

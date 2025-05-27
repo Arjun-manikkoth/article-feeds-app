@@ -31,4 +31,9 @@ export interface IEditProfile {
     preference: string[];
 }
 
+export interface IChangePassword {
+    currentPassword: string;
+    newPassword: string;
+}
+
 export type { SignUp, SignIn, IUser };

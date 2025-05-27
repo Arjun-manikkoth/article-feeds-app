@@ -1,3 +1,4 @@
+import { IChangePassword } from "./../../../client/src/Interfaces/userInterfaces";
 interface IServiceResponse {
     message: string;
     statusCode: number;
@@ -31,5 +32,21 @@ interface ISignInResponse extends IServiceResponse {
 interface ISignUpResponse extends IServiceResponse {
     data: ISignUp | null;
 }
+interface IGeneralResponse extends IServiceResponse {
+    data: null;
+}
 
-export { ISignUp, ISignIn, ISignUpResponse, ISignInResponse, IEditProfile };
+interface IPasswordChange {
+    password: string;
+    newPassword: string;
+}
+
+export {
+    ISignUp,
+    ISignIn,
+    ISignUpResponse,
+    ISignInResponse,
+    IEditProfile,
+    IPasswordChange,
+    IGeneralResponse,
+};

@@ -245,6 +245,45 @@ class UserController {
             });
         }
     }
+
+    async changePassword(req: Request, res: Response): Promise<void> {
+        try {
+            if (!req.body.currentPassword || !req.body.newPassword || !req.params.id) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({
+                    success: false,
+                    message: GeneralMessages.MISSING_REQUIRED_FIELDS,
+                    data: null,
+                });
+                return;
+            }
+
+            const response = await this.userService.changePassword(req.params.id as string, {
+                password: req.body.currentPassword,
+                newPassword: req.body.newPassword,
+            });
+
+            if (response.statusCode === HTTP_STATUS.OK) {
+                res.status(HTTP_STATUS.OK).json({
+                    success: true,
+                    message: response.message,
+                    data: null,
+                });
+            } else {
+                res.status(response.statusCode).json({
+                    success: false,
+                    message: response.message,
+                    data: null,
+                });
+            }
+        } catch (error: any) {
+            console.error(error.message);
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: GeneralMessages.INTERNAL_SERVER_ERROR,
+                data: null,
+            });
+        }
+    }
 }
 
 export default UserController;
