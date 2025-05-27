@@ -12,10 +12,20 @@ const signUpApi = async (data: SignUp) => {
             data: response.data.data,
         };
     } catch (error: unknown) {
-        if (error instanceof Error) {
+        if (isAxiosError(error)) {
             console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to sign into account",
+                data: error.response?.data.data,
+            };
         } else {
             console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
         }
     }
 };
@@ -54,14 +64,24 @@ const fetchProfileApi = async (id: string | null, data: SignIn) => {
 
         return {
             success: true,
-            message: response.data.message || "Failed to fetch profile",
+            message: response.data.message || "Profile fetched successfully",
             data: response.data.data,
         };
     } catch (error: unknown) {
-        if (error instanceof Error) {
+        if (isAxiosError(error)) {
             console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to fetch profile",
+                data: error.response?.data.data,
+            };
         } else {
             console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
         }
     }
 };
