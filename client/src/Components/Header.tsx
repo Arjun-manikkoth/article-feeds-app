@@ -1,9 +1,24 @@
 import React, { useState } from "react";
+import { logoutApi } from "../Api/userApi";
+import toast from "react-hot-toast";
+import { clearUser } from "../Redux/Slices/UserSlice";
+import { useAppHelpers } from "../Hooks/useAppHelpers";
 
 const Header: React.FC = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isArticlesOpen, setArticlesOpen] = useState(false);
     const [isProfileOpen, setProfileOpen] = useState(false);
+
+    const { dispatch, navigate } = useAppHelpers();
+
+    const handleLogout = async () => {
+        const status = await logoutApi();
+        if (!status.success) {
+            toast.error(status.message);
+        }
+        dispatch(clearUser());
+        navigate("/sign-in");
+    };
 
     return (
         <header className="bg-gray-900 text-white shadow-md">
@@ -152,6 +167,12 @@ const Header: React.FC = () => {
                                 >
                                     Change Password
                                 </a>
+                                <p
+                                    className="block px-4 py-2 text-gray-200 hover:bg-gray-700 hover:text-amber-300 sm:rounded-b-md"
+                                    onClick={() => handleLogout()}
+                                >
+                                    Logout
+                                </p>
                             </div>
                         )}
                     </div>

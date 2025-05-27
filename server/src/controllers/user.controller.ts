@@ -133,6 +133,35 @@ class UserController {
             });
         }
     }
+
+    //clears token and signs out
+    async signOut(req: Request, res: Response): Promise<void> {
+        try {
+            res.clearCookie("accessToken", {
+                httpOnly: true,
+                secure: false,
+                //  sameSite: "none",
+            });
+            res.clearCookie("refreshToken", {
+                httpOnly: true,
+                secure: false,
+                // sameSite: "none",
+            });
+
+            res.status(HTTP_STATUS.OK).json({
+                success: true,
+                message: AuthMessages.SIGN_OUT_SUCCESS,
+                data: null,
+            });
+        } catch (error: any) {
+            console.error(error.message);
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: GeneralMessages.INTERNAL_SERVER_ERROR,
+                data: null,
+            });
+        }
+    }
 }
 
 export default UserController;

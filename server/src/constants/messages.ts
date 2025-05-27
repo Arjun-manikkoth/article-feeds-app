@@ -4,6 +4,7 @@ export const AuthMessages = {
     SIGN_UP_SUCCESS: "Account created successfully",
     SIGN_IN_SUCCESS: "Signed in successfully",
     INVALID_CREDENTIALS: "Invalid credentials",
+    SIGN_OUT_SUCCESS: "Signed out successfully",
 };
 
 export const GeneralMessages = {

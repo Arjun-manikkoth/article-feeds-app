@@ -86,4 +86,33 @@ const fetchProfileApi = async (id: string | null, data: SignIn) => {
     }
 };
 
-export { signUpApi, signInApi, fetchProfileApi };
+//api logouts clears access and refresh tokens
+const logoutApi = async () => {
+    try {
+        const response = await axiosUser.get("/users/sign-out");
+
+        return {
+            success: true,
+            message: response.data.message,
+            data: null,
+        };
+    } catch (error: unknown) {
+        if (isAxiosError(error)) {
+            console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to sign out",
+                data: error.response?.data.data,
+            };
+        } else {
+            console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
+        }
+    }
+};
+
+export { signUpApi, signInApi, fetchProfileApi, logoutApi };

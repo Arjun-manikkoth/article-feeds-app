@@ -17,4 +17,6 @@ userRoute.route("/sign-up").post((req, res) => userController.signUp(req, res));
 
 userRoute.route("/sign-in").post((req, res) => userController.signIn(req, res));
 
+userRoute.route("/sign-out").get((req, res) => userController.signOut(req, res));
+
 export default userRoute;
