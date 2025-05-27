@@ -3,6 +3,7 @@ import { logoutApi } from "../Api/userApi";
 import toast from "react-hot-toast";
 import { clearUser } from "../Redux/Slices/UserSlice";
 import { useAppHelpers } from "../Hooks/useAppHelpers";
+import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -92,8 +93,8 @@ const Header: React.FC = () => {
                                 id="articles-menu"
                                 className="relative sm:absolute right-0 mt-2 w-full sm:w-48 max-w-[calc(100vw-2rem)] bg-gray-800 rounded-md shadow-lg z-50 border border-gray-700"
                             >
-                                <a
-                                    href="/articles"
+                                <Link
+                                    to="/articles"
                                     className="block px-4 py-2 text-gray-200 hover:bg-gray-700 hover:text-amber-300 sm:rounded-b-md"
                                     onClick={() => {
                                         setArticlesOpen(false);
@@ -101,9 +102,9 @@ const Header: React.FC = () => {
                                     }}
                                 >
                                     Home
-                                </a>
-                                <a
-                                    href="/my-articles"
+                                </Link>
+                                <Link
+                                    to="/my-articles"
                                     className="block px-4 py-2 text-gray-200 hover:bg-gray-700 hover:text-amber-300 sm:rounded-t-md"
                                     onClick={() => {
                                         setArticlesOpen(false);
@@ -111,9 +112,9 @@ const Header: React.FC = () => {
                                     }}
                                 >
                                     My Articles
-                                </a>
-                                <a
-                                    href="/add-article"
+                                </Link>
+                                <Link
+                                    to="/add-article"
                                     className="block px-4 py-2 text-gray-200 hover:bg-gray-700 hover:text-amber-300 sm:rounded-b-md"
                                     onClick={() => {
                                         setArticlesOpen(false);
@@ -121,7 +122,7 @@ const Header: React.FC = () => {
                                     }}
                                 >
                                     Create Article
-                                </a>
+                                </Link>
                             </div>
                         )}
                     </div>
@@ -157,8 +158,8 @@ const Header: React.FC = () => {
                                 id="profile-menu"
                                 className="relative sm:absolute right-0 mt-2 w-full sm:w-48 max-w-[calc(100vw-2rem)] bg-gray-800 rounded-md shadow-lg z-50 border border-gray-700"
                             >
-                                <a
-                                    href="/profile"
+                                <Link
+                                    to="/profile"
                                     className="block px-4 py-2 text-gray-200 hover:bg-gray-700 hover:text-amber-300 sm:rounded-t-md"
                                     onClick={() => {
                                         setProfileOpen(false);
@@ -166,9 +167,9 @@ const Header: React.FC = () => {
                                     }}
                                 >
                                     Profile
-                                </a>
-                                <a
-                                    href="/change-password"
+                                </Link>
+                                <Link
+                                    to="/change-password"
                                     className="block px-4 py-2 text-gray-200 hover:bg-gray-700 hover:text-amber-300 sm:rounded-b-md"
                                     onClick={() => {
                                         setProfileOpen(false);
@@ -176,7 +177,7 @@ const Header: React.FC = () => {
                                     }}
                                 >
                                     Change Password
-                                </a>
+                                </Link>
                                 <p
                                     className="block px-4 py-2 text-gray-200 hover:bg-gray-700 hover:text-amber-300 sm:rounded-b-md"
                                     onClick={() => handleLogout()}

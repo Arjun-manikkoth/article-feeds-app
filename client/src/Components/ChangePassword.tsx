@@ -183,7 +183,7 @@ const ChangePassword: React.FC = () => {
                                 type="button"
                                 onClick={() => {
                                     reset();
-                                    navigate("articles");
+                                    navigate("/articles");
                                 }}
                                 className="w-full sm:w-1/2 bg-gray-600 text-white p-3 rounded-lg hover:bg-gray-700 transition-colors text-base font-medium"
                             >

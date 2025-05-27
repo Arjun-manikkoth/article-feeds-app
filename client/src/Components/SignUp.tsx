@@ -7,6 +7,7 @@ import { signUpApi } from "../Api/userApi";
 import { interests } from "../Constants/constant";
 import { useAppHelpers } from "../Hooks/useAppHelpers";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 // SignUp schema validation
 const signUpSchema = z
@@ -287,12 +288,12 @@ const SignUp: React.FC = () => {
                 </form>
                 <p className="text-center mt-6 text-gray-300">
                     Already have an account?{" "}
-                    <a
-                        href="/sign-in"
+                    <Link
+                        to="/sign-in"
                         className="text-amber-400 hover:text-amber-300 transition-colors duration-200"
                     >
                         Sign in
-                    </a>
+                    </Link>
                 </p>
             </div>
         </div>

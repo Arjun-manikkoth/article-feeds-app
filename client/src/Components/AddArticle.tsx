@@ -94,7 +94,7 @@ const AddArticle: React.FC = () => {
 
     if (!loginId) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4 pt-[96px]">
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4 pt-[128px]">
                 <p className="text-white text-lg">Please sign in to create an article.</p>
             </div>
         );
@@ -102,25 +102,25 @@ const AddArticle: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4 pt-[96px]">
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4 pt-[128px]">
                 <p className="text-white text-lg">Loading...</p>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 mt-16 sm:p-6 pt-[96px] relative z-0">
-            <div className="w-full max-w-md">
-                <div className="bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 border border-gray-700/50">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">
+        <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 sm:p-6 pt-[128px] relative z-0">
+            <div className="w-full max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mt-6 mx-auto">
+                <div className="bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 border border-gray-700">
+                    <h2 className="text-4xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent mb-8">
                         Create Article
                     </h2>
-                    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-                        <div className="space-y-4">
+                    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
+                        <div className="space-y-6">
                             <div>
                                 <label
                                     htmlFor="articleName"
-                                    className="block text-base font-medium text-gray-400 mb-1"
+                                    className="block text-lg font-semibold text-gray-300 mb-2"
                                 >
                                     Article Name
                                 </label>
@@ -128,14 +128,15 @@ const AddArticle: React.FC = () => {
                                     type="text"
                                     id="articleName"
                                     {...register("articleName")}
-                                    className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 transition-colors text-base"
+                                    placeholder="Enter article name"
+                                    className="w-full p-4 bg-gray-700/50 text-white border border-gray-600/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all text-base placeholder-gray-400"
                                     aria-invalid={errors.articleName ? "true" : "false"}
                                     aria-describedby="articleName-error"
                                 />
                                 {errors.articleName && (
                                     <span
                                         id="articleName-error"
-                                        className="text-amber-600 text-sm mt-1 block"
+                                        className="text-amber-500 text-sm mt-2 block"
                                     >
                                         {errors.articleName.message}
                                     </span>
@@ -145,22 +146,23 @@ const AddArticle: React.FC = () => {
                             <div>
                                 <label
                                     htmlFor="description"
-                                    className="block text-base font-medium text-gray-400 mb-1"
+                                    className="block text-lg font-semibold text-gray-300 mb-2"
                                 >
                                     Description
                                 </label>
                                 <textarea
                                     id="description"
                                     {...register("description")}
-                                    rows={4}
-                                    className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 transition-colors text-base"
+                                    rows={6}
+                                    placeholder="Describe your article"
+                                    className="w-full p-4 bg-gray-700/50 text-white border border-gray-600/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all text-base placeholder-gray-400"
                                     aria-invalid={errors.description ? "true" : "false"}
                                     aria-describedby="description-error"
                                 />
                                 {errors.description && (
                                     <span
                                         id="description-error"
-                                        className="text-amber-600 text-sm mt-1 block"
+                                        className="text-amber-500 text-sm mt-2 block"
                                     >
                                         {errors.description.message}
                                     </span>
@@ -170,14 +172,14 @@ const AddArticle: React.FC = () => {
                             <div>
                                 <label
                                     htmlFor="category"
-                                    className="block text-base font-medium text-gray-400 mb-1"
+                                    className="block text-lg font-semibold text-gray-300 mb-2"
                                 >
                                     Category
                                 </label>
                                 <select
                                     id="category"
                                     {...register("category")}
-                                    className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 transition-colors text-base"
+                                    className="w-full p-4 bg-gray-700/50 text-white border border-gray-600/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all text-base"
                                     aria-invalid={errors.category ? "true" : "false"}
                                     aria-describedby="category-error"
                                 >
@@ -193,7 +195,7 @@ const AddArticle: React.FC = () => {
                                 {errors.category && (
                                     <span
                                         id="category-error"
-                                        className="text-amber-600 text-sm mt-1 block"
+                                        className="text-amber-500 text-sm mt-2 block"
                                     >
                                         {errors.category.message}
                                     </span>
@@ -203,7 +205,7 @@ const AddArticle: React.FC = () => {
                             <div>
                                 <label
                                     htmlFor="images"
-                                    className="block text-base font-medium text-gray-400 mb-1"
+                                    className="block text-lg font-semibold text-gray-300 mb-2"
                                 >
                                     Images (Select exactly two)
                                 </label>
@@ -213,14 +215,14 @@ const AddArticle: React.FC = () => {
                                     multiple
                                     accept="image/jpeg,image/png,image/gif"
                                     {...register("images")}
-                                    className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 transition-colors text-base"
+                                    className="w-full p-4 bg-gray-700/50 text-white border border-gray-600/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all text-base file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-amber-600 file:text-white file:hover:bg-amber-700"
                                     aria-invalid={errors.images ? "true" : "false"}
                                     aria-describedby="images-error"
                                 />
                                 {errors.images && (
                                     <span
                                         id="images-error"
-                                        className="text-amber-600 text-sm mt-1 block"
+                                        className="text-amber-500 text-sm mt-2 block"
                                     >
                                         {String(errors.images.message)}
                                     </span>
@@ -228,18 +230,18 @@ const AddArticle: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0 mt-6">
+                        <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 mt-8">
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="w-full sm:w-1/2 bg-amber-600 text-white p-3 rounded-lg hover:bg-amber-700 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors text-base font-medium"
+                                className="w-full sm:w-1/2 bg-gradient-to-r from-amber-600 to-amber-700 text-white p-4 rounded-xl hover:from-amber-700 hover:to-amber-800 disabled:bg-gray-600 disabled:cursor-not-allowed transition-all shadow-md text-base font-semibold"
                             >
                                 {isSubmitting ? "Saving..." : "Create Article"}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => reset()}
-                                className="w-full sm:w-1/2 bg-gray-600 text-white p-3 rounded-lg hover:bg-gray-700 transition-colors text-base font-medium"
+                                className="w-full sm:w-1/2 bg-gray-600 text-white p-4 rounded-xl hover:bg-gray-700 transition-all shadow-md text-base font-semibold"
                             >
                                 Cancel
                             </button>

@@ -6,6 +6,7 @@ import { signInApi } from "../Api/userApi";
 import toast from "react-hot-toast";
 import { useAppHelpers } from "../Hooks/useAppHelpers";
 import { setUser } from "../Redux/Slices/UserSlice";
+import { Link } from "react-router-dom";
 
 // SignIn schema validation
 const signInSchema = z.object({
@@ -110,12 +111,12 @@ const SignIn: React.FC = () => {
                 </form>
                 <p className="text-center mt-6 text-gray-300">
                     Sign up with new account?{" "}
-                    <a
-                        href="/sign-up"
+                    <Link
+                        to="/sign-up"
                         className="text-amber-400 hover:text-amber-300 transition-colors duration-200"
                     >
                         Sign up
-                    </a>
+                    </Link>
                 </p>
             </div>
         </div>
