@@ -7,6 +7,11 @@ export const AuthMessages = {
     SIGN_OUT_SUCCESS: "Signed out successfully",
 };
 
+export const ProfileMessages = {
+    PROFILE_FETCH_SUCCESS: "Fetched profile successfully",
+    PROFILE_FETCH_FAILURE: "Failed to fetch profile details",
+};
+
 export const GeneralMessages = {
     MISSING_REQUIRED_FIELDS: "Some fields are missing or invalid",
     INTERNAL_SERVER_ERROR: "Internal server error",

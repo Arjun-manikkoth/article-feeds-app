@@ -38,7 +38,7 @@ const SignIn: React.FC = () => {
         const status = await signInApi(data);
 
         if (status?.success) {
-            dispatch(setUser({ id: status.data.id, loginId: status.data.loginId }));
+            dispatch(setUser({ id: status.data.id, loginId: data.loginId }));
             navigate(`/articles`);
         } else {
             toast.error(status?.message);

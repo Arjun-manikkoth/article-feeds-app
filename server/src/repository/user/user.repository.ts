@@ -48,5 +48,17 @@ class UserRepository extends BaseRepository<IUser> implements IUserRepository {
             throw new Error("Failed to find account");
         }
     }
+
+    //get user data with id
+    async getUserDataWithId(id: string): Promise<IUser | null> {
+        try {
+            const data = await this.findById(id);
+
+            return data;
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to fetch profile data");
+        }
+    }
 }
 export default UserRepository;

@@ -58,9 +58,10 @@ const signInApi = async (data: SignIn) => {
     }
 };
 
-const fetchProfileApi = async (id: string | null, data: SignIn) => {
+// user profile data
+const fetchProfileApi = async (id: string) => {
     try {
-        const response = await axiosUser.post(`/users/profile/${id}`, data);
+        const response = await axiosUser.get(`/users/${id}`);
 
         return {
             success: true,

@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import SignUpPage from "./Pages/SignUp";
 import SignInPage from "./Pages/SignIn";
 import HomePage from "./Pages/Home";
+import ProfilePage from "./Pages/Profile";
 import { AuthProtected } from "./Components/Protected/AuthProtected";
 import UserProtected from "./Components/Protected/UserProtected";
 
@@ -17,6 +18,7 @@ const App: React.FC = () => {
                     </Route>
                     <Route Component={UserProtected}>
                         <Route path="/articles" Component={HomePage} />
+                        <Route path={`/profile`} Component={ProfilePage} />
                     </Route>
                 </Routes>
             </Router>

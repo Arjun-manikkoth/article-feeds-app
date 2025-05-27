@@ -5,12 +5,14 @@ import {
     ISignInResponse,
     ISignUpResponse,
 } from "../../interfaces/user.interface";
+import { IUser } from "../../models/user.model";
 import IUserRepository from "../../repository/user/user.repository.interface";
 import { hashPassword, comparePasswords } from "../../utils/hash.password";
 import { generateTokens } from "../../utils/generate.tokens";
 import { AuthMessages } from "../../constants/messages";
 import { HTTP_STATUS } from "../../constants/status.code";
 import { isEmail } from "../../utils/regex.check";
+import { camelCase, mapKeys } from "lodash-es";
 
 class UserService implements IUserService {
     constructor(private userRepository: IUserRepository) {}
@@ -88,6 +90,21 @@ class UserService implements IUserService {
         } catch (error: any) {
             console.log(error.message);
             throw new Error("Failed to sign in");
+        }
+    }
+
+    //fetch profile data associated with id
+    async getUserData(id: string): Promise<Partial<IUser> | null> {
+        try {
+            const data = await this.userRepository.getUserDataWithId(id);
+            if (!data) {
+                return null;
+            } else {
+                return mapKeys(data.toObject(), (value, key) => camelCase(key));
+            }
+        } catch (error: any) {
+            console.log(error.message);
+            return null;
         }
     }
 }

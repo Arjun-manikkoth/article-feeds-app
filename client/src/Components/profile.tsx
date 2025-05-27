@@ -6,6 +6,8 @@ import { interests } from "../Constants/constant";
 import { useAuth } from "../Hooks/useAuth";
 import { z } from "zod";
 import type { IUser } from "../Interfaces/userInterfaces";
+import { fetchProfileApi } from "../Api/userApi";
+import toast from "react-hot-toast";
 
 const profileSchema = z.object({
     firstName: z.string().min(1, "First name is required").max(50, "First name is too long"),
@@ -27,7 +29,8 @@ const Profile: React.FC = () => {
     const [user, setUser] = useState<IUser | null>(null);
     const [isEditing, setEditing] = useState(false);
     const [isLoading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+
+    const { id } = useAuth();
 
     const {
         register,
@@ -52,24 +55,20 @@ const Profile: React.FC = () => {
         }
 
         const fetchProfile = async () => {
-            // try {
-            //     setLoading(true);
-            //     // const response = await axios.get<{ data: IUser }>("/api/users/profile", {
-            //     //     headers: { Authorization: `Bearer ${token}` },
-            //     // });
-            //     // const userData = response.data.data;
-            //     // setUser(userData);
-            //     // reset({
-            //     //     firstName: userData.first_name,
-            //     //     lastName: userData.last_name,
-            //     //     dateOfBirth: new Date(userData.date_of_birth).toISOString().split("T")[0],
-            //     //     preference: userData.preference ? userData.preference.split(",") : [],
-            //     // });
-            // } catch (err: unknown) {
-            //     setError(err.response?.data?.message || "Failed to load profile");
-            // } finally {
-            //     setLoading(false);
-            // }
+            try {
+                if (id) {
+                    const status = await fetchProfileApi(id);
+
+                    if (status.success) {
+                        setUser(status.data);
+                        reset(status.data);
+                    }
+                }
+            } catch (err: unknown) {
+                toast.error("Unexpected error occured");
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchProfile();
@@ -77,25 +76,17 @@ const Profile: React.FC = () => {
 
     const onSubmit = async (data: ProfileFormData) => {
         try {
-            // const token = localStorage.getItem("accessToken");
-            // if (!token) {
-            //     throw new Error("No access token found");
-            // }
             // const updatedData = {
             //     first_name: data.firstName,
             //     last_name: data.lastName,
             //     date_of_birth: new Date(data.dateOfBirth).toISOString(),
-            //     preference: data.preference.join(","),
+            //     preference: data.preference,
             // };
-            // await axios.patch("/api/users/profile", updatedData, {
-            //     headers: { Authorization: `Bearer ${token}` },
-            // });
-            // setUser((prev) => (prev ? { ...prev, ...updatedData } : null));
+            // setUser((prev) => (prev ? { ...prev, ...data } : null));
             // setEditing(false);
-            // alert("Profile updated successfully");
+            // toast.success("Profile updated successfully");
         } catch (err: unknown) {
-            console.log(err);
-            //alert(err.response?.data?.message || "Failed to update profile");
+            toast.error("Failed to update profile");
         }
     };
 
@@ -115,236 +106,294 @@ const Profile: React.FC = () => {
         );
     }
 
-    if (error) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
-                <p className="text-amber-400 text-lg">{error}</p>
-            </div>
-        );
-    }
-
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-            <div className="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-xl shadow-2xl p-6 sm:p-8 border border-white/20">
-                <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-6">
-                    Your Profile
-                </h2>
-                {isEditing ? (
-                    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                        <div className="mb-4">
-                            <label
-                                htmlFor="firstName"
-                                className="block text-sm font-medium text-gray-200 mb-2"
-                            >
-                                First Name
-                            </label>
-                            <input
-                                type="text"
-                                id="firstName"
-                                {...register("firstName")}
-                                className="w-full p-3 bg-gray-700/50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all duration-300"
-                                aria-invalid={errors.firstName ? "true" : "false"}
-                                aria-describedby="firstName-error"
-                            />
-                            {errors.firstName && (
-                                <span
-                                    id="firstName-error"
-                                    className="text-amber-400 text-sm mt-2 block"
-                                >
-                                    {errors.firstName.message}
-                                </span>
-                            )}
+        <div className="min-h-screen bg-gray-900 pt-16 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-5xl mx-auto">
+                <div className="bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-700/50">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 mb-8">
+                        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-amber-600 flex items-center justify-center text-white text-4xl sm:text-5xl font-bold mx-auto sm:mx-0">
+                            {user?.firstName?.[0]?.toUpperCase() || "U"}
                         </div>
-
-                        <div className="mb-4">
-                            <label
-                                htmlFor="lastName"
-                                className="block text-sm font-medium text-gray-200 mb-2"
-                            >
-                                Last Name
-                            </label>
-                            <input
-                                type="text"
-                                id="lastName"
-                                {...register("lastName")}
-                                className="w-full p-3 bg-gray-700/50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all duration-300"
-                                aria-invalid={errors.lastName ? "true" : "false"}
-                                aria-describedby="lastName-error"
-                            />
-                            {errors.lastName && (
-                                <span
-                                    id="lastName-error"
-                                    className="text-amber-400 text-sm mt-2 block"
-                                >
-                                    {errors.lastName.message}
-                                </span>
-                            )}
+                        <div className="text-center sm:text-left mt-4 sm:mt-0">
+                            <h2 className="text-3xl sm:text-4xl font-bold text-white">
+                                {user?.firstName} {user?.lastName}
+                            </h2>
+                            <p className="text-gray-400 text-base sm:text-lg mt-1">{user?.email}</p>
                         </div>
-
-                        <div className="mb-4">
-                            <label
-                                htmlFor="email"
-                                className="block text-sm font-medium text-gray-200 mb-2"
-                            >
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                value={user?.email || ""}
-                                readOnly
-                                className="w-full p-3 bg-gray-700/50 text-gray-400 border border-gray-600 rounded-md cursor-not-allowed"
-                                aria-describedby="email-info"
-                            />
-                            <span id="email-info" className="text-gray-400 text-sm mt-2 block">
-                                Email cannot be edited.
-                            </span>
-                        </div>
-
-                        <div className="mb-4">
-                            <label
-                                htmlFor="phone"
-                                className="block text-sm font-medium text-gray-200 mb-2"
-                            >
-                                Phone
-                            </label>
-                            <input
-                                type="text"
-                                id="phone"
-                                value={user?.phone || ""}
-                                readOnly
-                                className="w-full p-3 bg-gray-700/50 text-gray-400 border border-gray-600 rounded-md cursor-not-allowed"
-                                aria-describedby="phone-info"
-                            />
-                            <span id="phone-info" className="text-gray-400 text-sm mt-2 block">
-                                Phone cannot be edited.
-                            </span>
-                        </div>
-
-                        <div className="mb-4">
-                            <label
-                                htmlFor="dateOfBirth"
-                                className="block text-sm font-medium text-gray-200 mb-2"
-                            >
-                                Date of Birth
-                            </label>
-                            <input
-                                type="date"
-                                id="dateOfBirth"
-                                {...register("dateOfBirth")}
-                                className="w-full p-3 bg-gray-700/50 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all duration-300"
-                                aria-invalid={errors.dateOfBirth ? "true" : "false"}
-                                aria-describedby="dateOfBirth-error"
-                            />
-                            {errors.dateOfBirth && (
-                                <span
-                                    id="dateOfBirth-error"
-                                    className="text-amber-400 text-sm mt-2 block"
-                                >
-                                    {errors.dateOfBirth.message}
-                                </span>
-                            )}
-                        </div>
-
-                        <div className="mb-6">
-                            <label
-                                htmlFor="preference"
-                                className="block text-sm font-medium text-gray-200 mb-2"
-                            >
-                                Preferences
-                            </label>
-                            <Controller
-                                name="preference"
-                                control={control}
-                                render={({ field }) => (
-                                    <Select
-                                        isMulti
-                                        options={interests}
-                                        value={interests.filter((option) =>
-                                            field.value.includes(option.value)
-                                        )}
-                                        onChange={(selected) =>
-                                            field.onChange(
-                                                selected
-                                                    ? selected.map((option) => option.value)
-                                                    : []
-                                            )
-                                        }
-                                        className="text-gray-900"
-                                        classNamePrefix="select"
-                                    />
-                                )}
-                            />
-                            {errors.preference && (
-                                <span
-                                    id="preference-error"
-                                    className="text-amber-400 text-sm mt-2 block"
-                                >
-                                    {errors.preference.message}
-                                </span>
-                            )}
-                        </div>
-
-                        <div className="flex space-x-4">
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 text-white p-3 rounded-md hover:from-amber-600 hover:to-amber-700 disabled:bg-gray-600 disabled:cursor-not-allowed transition-all duration-300"
-                            >
-                                {isSubmitting ? "Saving..." : "Save Changes"}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setEditing(false);
-                                    reset();
-                                }}
-                                className="flex-1 bg-gray-600 text-white p-3 rounded-md hover:bg-gray-700 transition-all duration-300"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
-                ) : (
-                    <div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-200">First Name</p>
-                            <p className="text-white">{user?.firstName}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-200">Last Name</p>
-                            <p className="text-white">{user?.lastName}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-200">Email</p>
-                            <p className="text-gray-400">{user?.email}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-200">Phone</p>
-                            <p className="text-gray-400">{user?.phone}</p>
-                        </div>
-                        <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-200">Date of Birth</p>
-                            <p className="text-white">
-                                {user?.dateOfBirth
-                                    ? new Date(user.dateOfBirth).toLocaleDateString()
-                                    : "Not set"}
-                            </p>
-                        </div>
-                        <div className="mb-6">
-                            <p className="text-sm font-medium text-gray-200">Preferences</p>
-                            <p className="text-white">
-                                {user?.preference ? user.preference.split(",").join(", ") : "None"}
-                            </p>
-                        </div>
-                        <button
-                            onClick={() => setEditing(true)}
-                            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white p-3 rounded-md hover:from-amber-600 hover:to-amber-700 transition-all duration-300"
-                        >
-                            Edit Profile
-                        </button>
                     </div>
-                )}
+
+                    {isEditing ? (
+                        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                <div>
+                                    <label
+                                        htmlFor="firstName"
+                                        className="block text-base font-medium text-gray-400 mb-2"
+                                    >
+                                        First Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="firstName"
+                                        {...register("firstName")}
+                                        className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 transition-colors text-base"
+                                        aria-invalid={errors.firstName ? "true" : "false"}
+                                        aria-describedby="firstName-error"
+                                    />
+                                    {errors.firstName && (
+                                        <span
+                                            id="firstName-error"
+                                            className="text-amber-600 text-sm mt-2 block"
+                                        >
+                                            {errors.firstName.message}
+                                        </span>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <label
+                                        htmlFor="lastName"
+                                        className="block text-base font-medium text-gray-400 mb-2"
+                                    >
+                                        Last Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="lastName"
+                                        {...register("lastName")}
+                                        className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 transition-colors text-base"
+                                        aria-invalid={errors.lastName ? "true" : "false"}
+                                        aria-describedby="lastName-error"
+                                    />
+                                    {errors.lastName && (
+                                        <span
+                                            id="lastName-error"
+                                            className="text-amber-600 text-sm mt-2 block"
+                                        >
+                                            {errors.lastName.message}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label
+                                    htmlFor="email"
+                                    className="block text-base font-medium text-gray-400 mb-2"
+                                >
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    value={user?.email || ""}
+                                    readOnly
+                                    className="w-full p-3 bg-gray-700 text-gray-400 border border-gray-600 rounded-lg cursor-not-allowed text-base"
+                                    aria-describedby="email-info"
+                                />
+                                <span id="email-info" className="text-gray-500 text-sm mt-2 block">
+                                    Email cannot be edited.
+                                </span>
+                            </div>
+
+                            <div>
+                                <label
+                                    htmlFor="phone"
+                                    className="block text-base font-medium text-gray-400 mb-2"
+                                >
+                                    Phone
+                                </label>
+                                <input
+                                    type="text"
+                                    id="phone"
+                                    value={user?.phone || ""}
+                                    readOnly
+                                    className="w-full p-3 bg-gray-700 text-gray-400 border border-gray-600 rounded-lg cursor-not-allowed text-base"
+                                    aria-describedby="phone-info"
+                                />
+                                <span id="phone-info" className="text-gray-500 text-sm mt-2 block">
+                                    Phone cannot be edited.
+                                </span>
+                            </div>
+
+                            <div>
+                                <label
+                                    htmlFor="dateOfBirth"
+                                    className="block text-base font-medium text-gray-400 mb-2"
+                                >
+                                    Date of Birth
+                                </label>
+                                <input
+                                    type="date"
+                                    id="dateOfBirth"
+                                    {...register("dateOfBirth")}
+                                    className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-600 transition-colors text-base"
+                                    aria-invalid={errors.dateOfBirth ? "true" : "false"}
+                                    aria-describedby="dateOfBirth-error"
+                                />
+                                {errors.dateOfBirth && (
+                                    <span
+                                        id="dateOfBirth-error"
+                                        className="text-amber-600 text-sm mt-2 block"
+                                    >
+                                        {errors.dateOfBirth.message}
+                                    </span>
+                                )}
+                            </div>
+
+                            <div>
+                                <label
+                                    htmlFor="preference"
+                                    className="block text-base font-medium text-gray-400 mb-2"
+                                >
+                                    Preferences
+                                </label>
+                                <Controller
+                                    name="preference"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Select
+                                            isMulti
+                                            options={interests}
+                                            value={interests.filter((option) =>
+                                                field.value.includes(option.value)
+                                            )}
+                                            onChange={(selected) =>
+                                                field.onChange(
+                                                    selected
+                                                        ? selected.map((option) => option.value)
+                                                        : []
+                                                )
+                                            }
+                                            classNamePrefix="select"
+                                            styles={{
+                                                control: (base) => ({
+                                                    ...base,
+                                                    backgroundColor: "#374151",
+                                                    borderColor: "#4b5563",
+                                                    color: "white",
+                                                    borderRadius: "0.5rem",
+                                                    padding: "0.5rem",
+                                                    fontSize: "1rem",
+                                                }),
+                                                menu: (base) => ({
+                                                    ...base,
+                                                    backgroundColor: "#1f2937",
+                                                    color: "white",
+                                                }),
+                                                option: (base, state) => ({
+                                                    ...base,
+                                                    backgroundColor: state.isSelected
+                                                        ? "#d97706"
+                                                        : state.isFocused
+                                                        ? "#374151"
+                                                        : "#1f2937",
+                                                    color: "white",
+                                                    fontSize: "1rem",
+                                                }),
+                                                multiValue: (base) => ({
+                                                    ...base,
+                                                    backgroundColor: "#d97706",
+                                                    color: "white",
+                                                }),
+                                                multiValueLabel: (base) => ({
+                                                    ...base,
+                                                    color: "white",
+                                                    fontSize: "1rem",
+                                                }),
+                                                multiValueRemove: (base) => ({
+                                                    ...base,
+                                                    color: "white",
+                                                    ":hover": {
+                                                        backgroundColor: "#b45309",
+                                                        color: "white",
+                                                    },
+                                                }),
+                                            }}
+                                        />
+                                    )}
+                                />
+                                {errors.preference && (
+                                    <span
+                                        id="preference-error"
+                                        className="text-amber-600 text-sm mt-2 block"
+                                    >
+                                        {errors.preference.message}
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="w-full sm:w-1/2 bg-amber-600 text-white p-4 rounded-lg hover:bg-amber-700 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors text-base font-medium"
+                                >
+                                    {isSubmitting ? "Saving..." : "Save Changes"}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setEditing(false);
+                                        reset();
+                                    }}
+                                    className="w-full sm:w-1/2 bg-gray-600 text-white p-4 rounded-lg hover:bg-gray-700 transition-colors text-base font-medium"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    ) : (
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                <div className="bg-gray-900 p-4 sm:p-6 rounded-lg border border-gray-700">
+                                    <p className="text-base text-gray-400">First Name</p>
+                                    <p className="text-white text-lg sm:text-xl">
+                                        {user?.firstName || "Not set"}
+                                    </p>
+                                </div>
+                                <div className="bg-gray-900 p-4 sm:p-6 rounded-lg border border-gray-700">
+                                    <p className="text-base text-gray-400">Last Name</p>
+                                    <p className="text-white text-lg sm:text-xl">
+                                        {user?.lastName || "Not set"}
+                                    </p>
+                                </div>
+                                <div className="bg-gray-900 p-4 sm:p-6 rounded-lg border border-gray-700">
+                                    <p className="text-base text-gray-400">Email</p>
+                                    <p className="text-gray-400 text-lg sm:text-xl">
+                                        {user?.email || "Not set"}
+                                    </p>
+                                </div>
+                                <div className="bg-gray-900 p-4 sm:p-6 rounded-lg border border-gray-700">
+                                    <p className="text-base text-gray-400">Phone</p>
+                                    <p className="text-gray-400 text-lg sm:text-xl">
+                                        {user?.phone || "Not set"}
+                                    </p>
+                                </div>
+                                <div className="bg-gray-900 p-4 sm:p-6 rounded-lg border border-gray-700">
+                                    <p className="text-base text-gray-400">Date of Birth</p>
+                                    <p className="text-white text-lg sm:text-xl">
+                                        {user?.dateOfBirth
+                                            ? new Date(user.dateOfBirth).toLocaleDateString()
+                                            : "Not set"}
+                                    </p>
+                                </div>
+                                <div className="bg-gray-900 p-4 sm:p-6 rounded-lg border border-gray-700">
+                                    <p className="text-base text-gray-400">Preferences</p>
+                                    <p className="text-white text-lg sm:text-xl">
+                                        {user?.preference ? user.preference.join(", ") : "None"}
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setEditing(true)}
+                                className="w-full bg-amber-600 text-white p-4 rounded-lg hover:bg-amber-700 transition-colors text-base font-medium"
+                            >
+                                Edit Profile
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
