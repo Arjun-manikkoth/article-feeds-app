@@ -97,14 +97,14 @@ const Profile: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 pt-16 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen h-full bg-gray-900 pt-16 px-4 sm:px-6 lg:px-8 overflow-y-auto">
             <div className="max-w-5xl mx-auto">
                 <div className="bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-700/50">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 mb-8">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-8 mb-8">
                         <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-amber-600 flex items-center justify-center text-white text-4xl sm:text-5xl font-bold mx-auto sm:mx-0">
                             {user?.firstName?.[0]?.toUpperCase() || "U"}
                         </div>
-                        <div className="text-center sm:text-left mt-4 sm:mt-0">
+                        <div className="text-center sm:text-left mt-4 sm:mt-0 sm:pl-2">
                             <h2 className="text-3xl sm:text-4xl font-bold text-white">
                                 {user?.firstName} {user?.lastName}
                             </h2>
@@ -271,6 +271,9 @@ const Profile: React.FC = () => {
                                                     ...base,
                                                     backgroundColor: "#1f2937",
                                                     color: "white",
+                                                    maxHeight: "200px",
+                                                    overflowY: "auto",
+                                                    zIndex: 20,
                                                 }),
                                                 option: (base, state) => ({
                                                     ...base,
