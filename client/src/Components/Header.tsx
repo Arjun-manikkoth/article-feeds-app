@@ -113,7 +113,7 @@ const Header: React.FC = () => {
                                     My Articles
                                 </a>
                                 <a
-                                    href="/create-article"
+                                    href="/add-article"
                                     className="block px-4 py-2 text-gray-200 hover:bg-gray-700 hover:text-amber-300 sm:rounded-b-md"
                                     onClick={() => {
                                         setArticlesOpen(false);

@@ -14,6 +14,11 @@ export const ProfileMessages = {
     UPDATE_PROFILE_FAILURE: "Failed to update profile details",
 };
 
+export const ArticleMessages = {
+    ARTICLE_CREATION_SUCCESS: "Created article successfully",
+    ARTICLE_CREATION_FAILURE: "Failed to create article",
+};
+
 export const PasswordMessages = {
     PASSWORD_VERIFY_SUCCESS: "Password verified successfully",
     PASSWORD_INVALID: "Invalid current password",

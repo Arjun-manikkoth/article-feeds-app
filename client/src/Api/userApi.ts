@@ -1,4 +1,10 @@
-import type { IChangePassword, IEditProfile, SignIn, SignUp } from "../Interfaces/userInterfaces";
+import type {
+    IArticle,
+    IChangePassword,
+    IEditProfile,
+    SignIn,
+    SignUp,
+} from "../Interfaces/userInterfaces";
 import axiosUser from "../Axios/Interceptor";
 import { isAxiosError } from "axios";
 
@@ -145,6 +151,46 @@ const updatePasswordApi = async (id: string | null, data: IChangePassword) => {
     }
 };
 
+// created an article
+const createArticleApi = async (id: string | null, data: IArticle) => {
+    try {
+        console.log("api is called");
+        const formData = new FormData();
+        formData.append("articleName", data.articleName);
+        formData.append("description", data.description);
+        formData.append("category", data.category);
+        console.log("form data before iamge");
+        if (data.images) {
+            Array.from(data.images).forEach((file) => {
+                formData.append("images", file);
+            });
+        }
+        console.log("call made");
+        const response = await axiosUser.post(`/users/${id}/article`, formData);
+        console.log("after call");
+        return {
+            success: true,
+            message: response.data.message || "Article created successfully",
+            data: response.data.data,
+        };
+    } catch (error: unknown) {
+        if (isAxiosError(error)) {
+            console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to create article",
+                data: error.response?.data.data,
+            };
+        } else {
+            console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
+        }
+    }
+};
 //api logouts clears access and refresh tokens
 const logoutApi = async () => {
     try {
@@ -174,4 +220,12 @@ const logoutApi = async () => {
     }
 };
 
-export { signUpApi, signInApi, fetchProfileApi, updateProfileApi, updatePasswordApi, logoutApi };
+export {
+    signUpApi,
+    signInApi,
+    fetchProfileApi,
+    updateProfileApi,
+    updatePasswordApi,
+    createArticleApi,
+    logoutApi,
+};

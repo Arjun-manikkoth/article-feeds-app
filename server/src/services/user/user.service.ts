@@ -16,6 +16,7 @@ import { AuthMessages, PasswordMessages, ProfileMessages } from "../../constants
 import { HTTP_STATUS } from "../../constants/status.code";
 import { isEmail } from "../../utils/regex.check";
 import { camelCase, mapKeys } from "lodash-es";
+import { uploadImages } from "../../utils/cloudinary";
 
 class UserService implements IUserService {
     constructor(private userRepository: IUserRepository) {}
