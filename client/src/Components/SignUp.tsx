@@ -5,6 +5,8 @@ import * as z from "zod";
 import Select from "react-select";
 import { signUpApi } from "../Api/userApi";
 import { interests } from "../Constants/constant";
+import { useAppHelpers } from "../Hooks/useAppHelpers";
+import toast from "react-hot-toast";
 
 // SignUp schema validation
 const signUpSchema = z
@@ -49,10 +51,16 @@ const SignUp: React.FC = () => {
             confirmPassword: "",
         },
     });
-
+    const { navigate } = useAppHelpers();
     const onSubmit = async (data: SignUpFormData) => {
-        await signUpApi(data);
-        // api logic to be added here with ui and validation completed
+        const status = await signUpApi(data);
+
+        if (status?.success) {
+            navigate("/sign-in");
+            toast.success(status?.message);
+        } else {
+            toast.error(status?.message);
+        }
     };
 
     return (
