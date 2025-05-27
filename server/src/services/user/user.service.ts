@@ -18,7 +18,9 @@ class UserService implements IUserService {
     //creates a new user document without duplicates
     async createUser(userData: ISignUp): Promise<ISignUpResponse> {
         try {
-            const exists = await this.userRepository.findUserByEmail(userData.email);
+            const exists =
+                (await this.userRepository.findUserByEmail(userData.email)) ||
+                (await this.userRepository.findUserByPhone(userData.phone));
 
             if (!exists) {
                 const hashedPassword = await hashPassword(userData.password);
