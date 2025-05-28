@@ -86,5 +86,50 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
             throw new Error("failed to fetch article");
         }
     }
+
+    async fetchPreferredArticle(id: string, preferences: string[]): Promise<IArticle[] | []> {
+        try {
+            return await this.model
+                .aggregate([
+                    {
+                        $match: {
+                            is_deleted: false,
+                            category: { $in: preferences },
+                            blocks: { $ne: new mongoose.Types.ObjectId(id) },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            account_id: 1,
+                            article_name: 1,
+                            description: 1,
+                            category: 1,
+                            images: 1,
+                            likesCount: { $size: "$likes" },
+                            dislikeCount: { $size: "$dislikes" },
+                            blockCount: { $size: "$blocks" },
+                        },
+                    },
+                ])
+                .exec();
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("failed to fetch articles preferred by user");
+        }
+    }
+
+    async updateArticleBlock(userId: string, articleId: string): Promise<boolean> {
+        try {
+            const status = await this.model.updateOne(
+                { _id: articleId },
+                { $addToSet: { blocks: userId } }
+            );
+            return status.modifiedCount > 0 ? true : false;
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("failed to fetch articles preferred by user");
+        }
+    }
 }
 export default ArticleRepository;

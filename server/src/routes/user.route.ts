@@ -44,12 +44,17 @@ userRoute
 
 userRoute
     .route("/:id/articles")
-    .post(upload.array("images", 2), (req, res) => articleController.addArticle(req, res));
+    .post(upload.array("images", 2), (req, res) => articleController.addArticle(req, res))
+    .get((req, res) => articleController.getAllArticles(req, res));
 
 userRoute.route("/:id/my-articles").get((req, res) => articleController.getMyArticles(req, res));
 
 userRoute
     .route("/:userId/articles/:articleId")
     .get((req, res) => articleController.getArticle(req, res));
+
+userRoute
+    .route("/:userId/articles/:articleId/block")
+    .patch((req, res) => articleController.blockArticle(req, res));
 
 export default userRoute;

@@ -19,6 +19,8 @@ export const ArticleMessages = {
     ARTICLE_CREATION_FAILURE: "Failed to create article",
     ARTICLE_FETCHING_SUCCESS: "Fetched articles successfully",
     ARTICLE_FETCHING_FAILURE: "Failed to fetch article",
+    ARTICLE_BLOCKED: "Article blocked successfully",
+    ARTICLE_BLOCKING_FAILED: "Failed to block article",
 };
 
 export const PasswordMessages = {

@@ -4,23 +4,12 @@ import { useAppHelpers } from "../Hooks/useAppHelpers";
 import toast from "react-hot-toast";
 import { fetchMyArticlesApi } from "../Api/userApi";
 import { FaHeart, FaThumbsDown, FaBan, FaPencilAlt, FaTrash } from "react-icons/fa";
-
-interface Article {
-    id: string;
-    authorId: string;
-    articleName: string;
-    description: string;
-    category: string[];
-    images: string[];
-    likesCount: number;
-    dislikesCount: number;
-    blocksCount: number;
-}
+import type { IArticle } from "../Interfaces/article.interfaces";
 
 const MyArticles: React.FC = () => {
     const { loginId, id } = useAuth();
     const { navigate } = useAppHelpers();
-    const [articles, setArticles] = useState<Article[]>([]);
+    const [articles, setArticles] = useState<IArticle[]>([]);
     const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {

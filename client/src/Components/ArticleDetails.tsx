@@ -4,24 +4,17 @@ import toast from "react-hot-toast";
 import { FaHeart, FaThumbsDown, FaBan } from "react-icons/fa";
 import { fetchArticleByIdApi } from "../Api/userApi";
 import { useAuth } from "../Hooks/useAuth";
-
-interface Article {
-    _id: string;
-    articleName: string;
-    description: string;
-    category: string[];
-    images: string[];
-    likesCount: number;
-    dislikesCount: number;
-    blocksCount: number;
-}
+import { blockArticleApi } from "../Api/userApi";
+import type { IArticle } from "../Interfaces/article.interfaces";
+import { useAppHelpers } from "../Hooks/useAppHelpers";
 
 const ArticleDetails: React.FC = () => {
     const { id: articleId } = useParams<{ id: string }>();
     const { id: userId } = useAuth();
-    const [article, setArticle] = useState<Article | null>(null);
+    const [article, setArticle] = useState<IArticle | null>(null);
     const [isLoading, setLoading] = useState(false);
-    console.log(articleId, "id");
+    const { navigate } = useAppHelpers();
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -34,7 +27,7 @@ const ArticleDetails: React.FC = () => {
                         toast.error("Article not found");
                     }
                 }
-            } catch (error) {
+            } catch (error: any) {
                 toast.error("Error fetching article");
             } finally {
                 setLoading(false);
@@ -43,6 +36,25 @@ const ArticleDetails: React.FC = () => {
 
         fetchData();
     }, [articleId]);
+
+    const blockArticle = async (articleId: string) => {
+        try {
+            if (!userId || !articleId) return;
+
+            const response = await blockArticleApi(userId, articleId);
+            if (response.success) {
+                toast.success("Article blocked");
+                setArticle(null);
+                setTimeout(() => {
+                    navigate("/articles");
+                }, 2000);
+            } else {
+                toast.error("Failed to block article");
+            }
+        } catch (err: any) {
+            toast.error("Error blocking article");
+        }
+    };
 
     if (isLoading) {
         return (
@@ -81,15 +93,18 @@ const ArticleDetails: React.FC = () => {
                     <div className="flex gap-6 text-sm text-gray-400 pt-4">
                         <div className="flex items-center gap-1">
                             <FaHeart className="text-amber-500" />
-                            {article.likesCount}
+                            {article.likesCount} Likes
                         </div>
                         <div className="flex items-center gap-1">
                             <FaThumbsDown className="text-amber-500" />
-                            {article.dislikesCount}
+                            {article.dislikesCount} Dislikes
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div
+                            className="flex items-center gap-1"
+                            onClick={() => blockArticle(article.id)}
+                        >
                             <FaBan className="text-amber-500" />
-                            {article.blocksCount}
+                            Not Intrested
                         </div>
                     </div>
                 </div>

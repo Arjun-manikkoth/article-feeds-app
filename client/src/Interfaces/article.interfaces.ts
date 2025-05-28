@@ -1,13 +1,12 @@
 interface IArticle {
-    _id: string;
-    authorId: string;
+    id: string;
+    accountId: string;
     articleName: string;
     description: string;
-    category: string[];
+    category: string;
     images: string[];
-    likes: string[];
-    dislikes: string[];
-    blocks: string[];
+    likesCount: number;
+    dislikesCount: number;
+    blocksCount: number;
 }
-
 export type { IArticle };

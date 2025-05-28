@@ -70,5 +70,39 @@ class ArticleService implements IArticleService {
             throw new Error("Failed to fetch articles");
         }
     }
+
+    //fetch all articles based on user preferrence
+    async fetchAllArticles(id: string): Promise<IArticle[] | []> {
+        try {
+            const userData = await this.userRepository.getUserDataWithId(id);
+
+            if (!userData) {
+                return [];
+            }
+
+            const data = await this.articleRepository.fetchPreferredArticle(
+                id,
+                userData.preference
+            );
+
+            if (data?.length) {
+                return data.map((article) =>
+                    mapKeys(article, (value, key) => camelCase(key))
+                ) as IArticle[];
+            } else return data;
+        } catch (error: any) {
+            console.log(error.messgage);
+            throw new Error("Failed to fetch articles");
+        }
+    }
+
+    async blockArticle(userId: string, articleId: string): Promise<boolean> {
+        try {
+            return await this.articleRepository.updateArticleBlock(userId, articleId);
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to block article");
+        }
+    }
 }
 export default ArticleService;

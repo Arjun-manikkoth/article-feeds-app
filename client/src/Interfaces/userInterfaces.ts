@@ -36,15 +36,4 @@ export interface IChangePassword {
     newPassword: string;
 }
 
-export interface IArticle {
-    id: string;
-    articleName: string;
-    description: string;
-    category: string;
-    images: string[];
-    likeCount: number;
-    dislikeCount: number;
-    blockCount: number;
-}
-
-export type { SignUp, SignIn, IUser, IArticle };
+export type { SignUp, SignIn, IUser };
