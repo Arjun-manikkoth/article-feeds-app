@@ -37,10 +37,14 @@ export interface IChangePassword {
 }
 
 export interface IArticle {
+    id: string;
     articleName: string;
     description: string;
     category: string;
-    images: File[];
+    images: string[];
+    likeCount: number;
+    dislikeCount: number;
+    blockCount: number;
 }
 
 export type { SignUp, SignIn, IUser, IArticle };

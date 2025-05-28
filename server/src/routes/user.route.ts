@@ -46,4 +46,6 @@ userRoute
     .route("/:id/article")
     .post(upload.array("images", 2), (req, res) => articleController.addArticle(req, res));
 
+userRoute.route("/:id/my-articles").get((req, res) => articleController.getMyArticles(req, res));
+
 export default userRoute;

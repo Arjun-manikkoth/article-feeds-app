@@ -24,5 +24,35 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
             throw new Error("Failed to create document");
         }
     }
+
+    async getArticlesByUserId(id: string): Promise<IArticle[] | []> {
+        try {
+            return await this.model
+                .aggregate([
+                    {
+                        $match: {
+                            account_id: new mongoose.Types.ObjectId(id),
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            account_id: 1,
+                            article_name: 1,
+                            description: 1,
+                            category: 1,
+                            images: 1,
+                            likesCount: { $size: "$likes" },
+                            dislikeCount: { $size: "$dislikes" },
+                            blockCount: { $size: "$blocks" },
+                        },
+                    },
+                ])
+                .exec();
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("failed to fetch articles related to user");
+        }
+    }
 }
 export default ArticleRepository;

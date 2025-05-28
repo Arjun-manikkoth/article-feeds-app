@@ -220,6 +220,35 @@ const logoutApi = async () => {
     }
 };
 
+// user articles data
+const fetchMyArticlesApi = async (id: string) => {
+    try {
+        const response = await axiosUser.get(`/users/${id}/my-articles`);
+
+        return {
+            success: true,
+            message: response.data.message || "Fetched my articles successfully",
+            data: response.data.data,
+        };
+    } catch (error: unknown) {
+        if (isAxiosError(error)) {
+            console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to fetch my articles",
+                data: error.response?.data.data,
+            };
+        } else {
+            console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
+        }
+    }
+};
+
 export {
     signUpApi,
     signInApi,
@@ -228,4 +257,5 @@ export {
     updatePasswordApi,
     createArticleApi,
     logoutApi,
+    fetchMyArticlesApi,
 };

@@ -8,6 +8,7 @@ import ChangePasswordPage from "./Pages/ChangePassword";
 import { AuthProtected } from "./Components/Protected/AuthProtected";
 import UserProtected from "./Components/Protected/UserProtected";
 import AddArticlePage from "./Pages/AddArticle";
+import MyArticlesPage from "./Pages/MyArticles";
 
 const App: React.FC = () => {
     return (
@@ -23,6 +24,7 @@ const App: React.FC = () => {
                         <Route path={`/profile`} Component={ProfilePage} />
                         <Route path={`/change-password`} Component={ChangePasswordPage} />
                         <Route path={`/add-article`} Component={AddArticlePage} />
+                        <Route path={`/my-articles`} Component={MyArticlesPage} />
                     </Route>
                 </Routes>
             </Router>

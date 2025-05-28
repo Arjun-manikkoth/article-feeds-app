@@ -6,6 +6,8 @@ import { HTTP_STATUS } from "../../constants/status.code";
 import { IGeneralResponse } from "../../interfaces/user.interface";
 import { uploadImages } from "../../utils/cloudinary";
 import IUserRepository from "../../repository/user/user.repository.interface";
+import { mapKeys, camelCase } from "lodash-es";
+import { IArticle } from "../../models/article.model";
 
 class ArticleService implements IArticleService {
     constructor(
@@ -25,7 +27,6 @@ class ArticleService implements IArticleService {
                     data: null,
                 };
             }
-            console.log(data, "data at services");
 
             const urls = await uploadImages(data.images);
 
@@ -39,6 +40,21 @@ class ArticleService implements IArticleService {
         } catch (error: any) {
             console.log(error.message);
             throw new Error("Failed to create article");
+        }
+    }
+
+    //fetch all articles related to user
+    async getArticles(id: string): Promise<IArticle[] | []> {
+        try {
+            const data = await this.articleRepository.getArticlesByUserId(id);
+            if (data?.length) {
+                return data.map((article) =>
+                    mapKeys(article, (value, key) => camelCase(key))
+                ) as IArticle[];
+            } else return data;
+        } catch (error: any) {
+            console.log(error.messgage);
+            throw new Error("Failed to fetch artcles");
         }
     }
 }
