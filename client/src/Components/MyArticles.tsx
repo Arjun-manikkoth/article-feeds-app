@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../Hooks/useAuth";
 import { useAppHelpers } from "../Hooks/useAppHelpers";
 import toast from "react-hot-toast";
-import { fetchMyArticlesApi } from "../Api/userApi";
+import { fetchMyArticlesApi, deleteArticleApi } from "../Api/userApi";
 import { FaHeart, FaThumbsDown, FaBan, FaPencilAlt, FaTrash } from "react-icons/fa";
 import type { IArticle } from "../Interfaces/article.interfaces";
 
@@ -37,14 +37,16 @@ const MyArticles: React.FC = () => {
 
     const handleDelete = async (articleId: string) => {
         try {
-            //     setLoading(true);
-            //     const response = await deleteArticleApi(articleId);
-            //     if (response.success) {
-            //         setArticles(articles.filter((article) => article._id !== articleId));
-            //         toast.success("Article deleted successfully");
-            //     } else {
-            //         toast.error("Failed to delete article");
-            //     }
+            if (id && articleId) {
+                setLoading(true);
+                const response = await deleteArticleApi(id, articleId);
+                if (response.success) {
+                    setArticles(articles.filter((article) => article.id !== articleId));
+                    toast.success("Article deleted successfully");
+                } else {
+                    toast.error("Failed to delete article");
+                }
+            }
         } catch (err) {
             toast.error("Error deleting article");
         } finally {
@@ -100,24 +102,6 @@ const MyArticles: React.FC = () => {
                                             <p className="text-gray-400 text-sm">No image</p>
                                         </div>
                                     )}
-
-                                    {/* Floating buttons */}
-                                    <div className="absolute top-2 right-2 flex gap-2 z-10">
-                                        <button
-                                            onClick={() => navigate(`/edit-article/${article.id}`)}
-                                            className="p-2 bg-black/50 backdrop-blur-sm rounded-full hover:bg-yellow-600/40 text-yellow-300 transition"
-                                            title="Edit"
-                                        >
-                                            <FaPencilAlt className="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(article.id)}
-                                            className="p-2 bg-black/50 backdrop-blur-sm rounded-full hover:bg-red-600/40 text-red-400 transition"
-                                            title="Delete"
-                                        >
-                                            <FaTrash className="w-4 h-4" />
-                                        </button>
-                                    </div>
                                 </div>
 
                                 {/* Article content */}
@@ -146,6 +130,30 @@ const MyArticles: React.FC = () => {
                                             <FaBan className="text-amber-500" />
                                             {article.blocksCount}
                                         </div>
+                                    </div>
+                                    <div className="flex justify-end gap-3 pt-3">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigate(`/edit-article/${article.id}`);
+                                            }}
+                                            className="flex items-center gap-1 px-3 py-1 text-xs text-yellow-300 bg-yellow-600/20 rounded hover:bg-yellow-600/40 transition"
+                                            title="Edit"
+                                        >
+                                            <FaPencilAlt className="w-3 h-3" />
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDelete(article.id);
+                                            }}
+                                            className="flex items-center gap-1 px-3 py-1 text-xs text-red-400 bg-red-600/20 rounded hover:bg-red-600/40 transition"
+                                            title="Delete"
+                                        >
+                                            <FaTrash className="w-3 h-3" />
+                                            Delete
+                                        </button>
                                     </div>
                                 </div>
                             </div>

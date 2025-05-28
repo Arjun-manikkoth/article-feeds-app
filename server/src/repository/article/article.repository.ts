@@ -51,7 +51,7 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
                 .exec();
         } catch (error: any) {
             console.log(error.message);
-            throw new Error("failed to fetch articles related to user");
+            throw new Error("Failed to fetch articles related to user");
         }
     }
 
@@ -83,7 +83,7 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
             return result[0] || null;
         } catch (error: any) {
             console.log(error.message);
-            throw new Error("failed to fetch article");
+            throw new Error("Failed to fetch article");
         }
     }
 
@@ -115,7 +115,7 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
                 .exec();
         } catch (error: any) {
             console.log(error.message);
-            throw new Error("failed to fetch articles preferred by user");
+            throw new Error("Failed to fetch articles preferred by user");
         }
     }
 
@@ -128,7 +128,16 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
             return status.modifiedCount > 0 ? true : false;
         } catch (error: any) {
             console.log(error.message);
-            throw new Error("failed to fetch articles preferred by user");
+            throw new Error("Failed to block article");
+        }
+    }
+
+    async updateDeleteArticle(articleId: string): Promise<boolean> {
+        try {
+            return await this.update(articleId, { is_deleted: true });
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to delete article");
         }
     }
 }

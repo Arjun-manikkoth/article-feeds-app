@@ -198,6 +198,42 @@ class ArticleController {
             });
         }
     }
+
+    async deleteArticle(req: Request, res: Response): Promise<void> {
+        try {
+            if (!req.params.userId || !req.params.articleId) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({
+                    success: false,
+                    message: GeneralMessages.MISSING_REQUIRED_FIELDS,
+                    data: null,
+                });
+                return;
+            }
+
+            const status = await this.articleService.deleteArticle(req.params.articleId as string);
+
+            if (status) {
+                res.status(HTTP_STATUS.OK).json({
+                    success: true,
+                    message: ArticleMessages.ARTICLE_DELETED,
+                    data: null,
+                });
+            } else {
+                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                    success: false,
+                    message: ArticleMessages.ARTICLE_DELETION_FAILED,
+                    data: null,
+                });
+            }
+        } catch (error: any) {
+            console.error(error.message);
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: GeneralMessages.INTERNAL_SERVER_ERROR,
+                data: null,
+            });
+        }
+    }
 }
 
 export default ArticleController;

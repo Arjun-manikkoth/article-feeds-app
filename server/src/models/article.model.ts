@@ -7,6 +7,7 @@ interface IArticle extends Document {
     article_name: string;
     description: string;
     category: string;
+    is_deleted?: boolean;
     images: string[];
     likes?: Types.ObjectId[];
     dislikes?: Types.ObjectId[];

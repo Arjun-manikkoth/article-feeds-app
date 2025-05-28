@@ -21,6 +21,8 @@ export const ArticleMessages = {
     ARTICLE_FETCHING_FAILURE: "Failed to fetch article",
     ARTICLE_BLOCKED: "Article blocked successfully",
     ARTICLE_BLOCKING_FAILED: "Failed to block article",
+    ARTICLE_DELETED: "Article deleted successfully",
+    ARTICLE_DELETION_FAILED: "Failed to delete article",
 };
 
 export const PasswordMessages = {

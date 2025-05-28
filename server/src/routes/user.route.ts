@@ -51,7 +51,8 @@ userRoute.route("/:id/my-articles").get((req, res) => articleController.getMyArt
 
 userRoute
     .route("/:userId/articles/:articleId")
-    .get((req, res) => articleController.getArticle(req, res));
+    .get((req, res) => articleController.getArticle(req, res))
+    .delete((req, res) => articleController.deleteArticle(req, res));
 
 userRoute
     .route("/:userId/articles/:articleId/block")

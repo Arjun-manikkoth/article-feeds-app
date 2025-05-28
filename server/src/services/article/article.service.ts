@@ -104,5 +104,14 @@ class ArticleService implements IArticleService {
             throw new Error("Failed to block article");
         }
     }
+
+    async deleteArticle(articleId: string): Promise<boolean> {
+        try {
+            return await this.articleRepository.updateDeleteArticle(articleId);
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to block article");
+        }
+    }
 }
 export default ArticleService;

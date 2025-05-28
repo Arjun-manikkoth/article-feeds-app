@@ -330,6 +330,35 @@ const blockArticleApi = async (userId: string, articleId: string) => {
     }
 };
 
+// delete article
+const deleteArticleApi = async (userId: string, articleId: string) => {
+    try {
+        const response = await axiosUser.delete(`/users/${userId}/articles/${articleId}`);
+
+        return {
+            success: true,
+            message: response.data.message || "Article deleted successfully",
+            data: response.data.data,
+        };
+    } catch (error: unknown) {
+        if (isAxiosError(error)) {
+            console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to delete article",
+                data: error.response?.data.data,
+            };
+        } else {
+            console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
+        }
+    }
+};
+
 export {
     signUpApi,
     signInApi,
@@ -342,4 +371,5 @@ export {
     fetchArticleByIdApi,
     fetchAllArticlesApi,
     blockArticleApi,
+    deleteArticleApi,
 };

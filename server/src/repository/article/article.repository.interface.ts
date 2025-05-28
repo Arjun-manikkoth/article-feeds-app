@@ -8,4 +8,5 @@ export default interface IArticleRepository extends IBaseRepository<IArticle> {
     getArticleById(id: string): Promise<IArticle | null>;
     fetchPreferredArticle(id: string, preferences: string[]): Promise<IArticle[] | []>;
     updateArticleBlock(userId: string, articleId: string): Promise<boolean>;
+    updateDeleteArticle(articleId: string): Promise<boolean>;
 }

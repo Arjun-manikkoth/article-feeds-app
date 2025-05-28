@@ -8,4 +8,5 @@ export default interface IArticleService {
     getArticle(id: string): Promise<IArticle | null>;
     fetchAllArticles(id: string): Promise<IArticle[] | []>;
     blockArticle(userId: string, articleId: string): Promise<boolean>;
+    deleteArticle(articleId: string): Promise<boolean>;
 }
