@@ -54,7 +54,20 @@ class ArticleService implements IArticleService {
             } else return data;
         } catch (error: any) {
             console.log(error.messgage);
-            throw new Error("Failed to fetch artcles");
+            throw new Error("Failed to fetch articles");
+        }
+    }
+    //fetch article with article Id
+    async getArticle(id: string): Promise<IArticle | null> {
+        try {
+            const data = await this.articleRepository.getArticleById(id);
+
+            if (data) {
+                return mapKeys(data, (value, key) => camelCase(key)) as IArticle;
+            } else return data;
+        } catch (error: any) {
+            console.log(error.messgage);
+            throw new Error("Failed to fetch articles");
         }
     }
 }

@@ -56,6 +56,10 @@ const articleSchema: Schema = new Schema(
                 default: [],
             },
         ],
+        is_deleted: {
+            type: Boolean,
+            default: false,
+        },
     },
     { timestamps: true }
 );

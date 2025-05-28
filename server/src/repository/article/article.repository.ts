@@ -54,5 +54,37 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
             throw new Error("failed to fetch articles related to user");
         }
     }
+
+    async getArticleById(id: string): Promise<IArticle | null> {
+        try {
+            const result = await this.model
+                .aggregate([
+                    {
+                        $match: {
+                            _id: new mongoose.Types.ObjectId(id),
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            account_id: 1,
+                            article_name: 1,
+                            description: 1,
+                            category: 1,
+                            images: 1,
+                            likesCount: { $size: "$likes" },
+                            dislikeCount: { $size: "$dislikes" },
+                            blockCount: { $size: "$blocks" },
+                        },
+                    },
+                ])
+                .exec();
+
+            return result[0] || null;
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("failed to fetch article");
+        }
+    }
 }
 export default ArticleRepository;

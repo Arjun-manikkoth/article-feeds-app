@@ -9,6 +9,7 @@ import { AuthProtected } from "./Components/Protected/AuthProtected";
 import UserProtected from "./Components/Protected/UserProtected";
 import AddArticlePage from "./Pages/AddArticle";
 import MyArticlesPage from "./Pages/MyArticles";
+import ArticleDetailsPage from "./Pages/ArticleDetails";
 
 const App: React.FC = () => {
     return (
@@ -25,6 +26,7 @@ const App: React.FC = () => {
                         <Route path={`/change-password`} Component={ChangePasswordPage} />
                         <Route path={`/add-article`} Component={AddArticlePage} />
                         <Route path={`/my-articles`} Component={MyArticlesPage} />
+                        <Route path={`/view-article/:id`} Component={ArticleDetailsPage} />
                     </Route>
                 </Routes>
             </Router>

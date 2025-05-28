@@ -6,7 +6,7 @@ import { fetchMyArticlesApi } from "../Api/userApi";
 import { FaHeart, FaThumbsDown, FaBan, FaPencilAlt, FaTrash } from "react-icons/fa";
 
 interface Article {
-    _id: string;
+    id: string;
     authorId: string;
     articleName: string;
     description: string;
@@ -92,7 +92,10 @@ const MyArticles: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                         {articles.map((article) => (
                             <div
-                                key={article._id}
+                                onClick={() => {
+                                    navigate(`/view-article/${article.id}`);
+                                }}
+                                key={article.id}
                                 className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-xl shadow-xl border border-amber-600/30 overflow-hidden hover:scale-[1.01] transition-transform duration-300"
                             >
                                 {/* Image with overlay buttons */}
@@ -112,14 +115,14 @@ const MyArticles: React.FC = () => {
                                     {/* Floating buttons */}
                                     <div className="absolute top-2 right-2 flex gap-2 z-10">
                                         <button
-                                            onClick={() => navigate(`/edit-article/${article._id}`)}
+                                            onClick={() => navigate(`/edit-article/${article.id}`)}
                                             className="p-2 bg-black/50 backdrop-blur-sm rounded-full hover:bg-yellow-600/40 text-yellow-300 transition"
                                             title="Edit"
                                         >
                                             <FaPencilAlt className="w-4 h-4" />
                                         </button>
                                         <button
-                                            onClick={() => handleDelete(article._id)}
+                                            onClick={() => handleDelete(article.id)}
                                             className="p-2 bg-black/50 backdrop-blur-sm rounded-full hover:bg-red-600/40 text-red-400 transition"
                                             title="Delete"
                                         >

@@ -166,7 +166,7 @@ const createArticleApi = async (id: string | null, data: IArticle) => {
             });
         }
         console.log("call made");
-        const response = await axiosUser.post(`/users/${id}/article`, formData);
+        const response = await axiosUser.post(`/users/${id}/articles`, formData);
         console.log("after call");
         return {
             success: true,
@@ -249,6 +249,35 @@ const fetchMyArticlesApi = async (id: string) => {
     }
 };
 
+// fetch article data with id
+const fetchArticleByIdApi = async (userId: string, articleId: string) => {
+    try {
+        const response = await axiosUser.get(`/users/${userId}/articles/${articleId}`);
+
+        return {
+            success: true,
+            message: response.data.message || "Fetched article successfully",
+            data: response.data.data,
+        };
+    } catch (error: unknown) {
+        if (isAxiosError(error)) {
+            console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to fetch articles",
+                data: error.response?.data.data,
+            };
+        } else {
+            console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
+        }
+    }
+};
+
 export {
     signUpApi,
     signInApi,
@@ -258,4 +287,5 @@ export {
     createArticleApi,
     logoutApi,
     fetchMyArticlesApi,
+    fetchArticleByIdApi,
 };
