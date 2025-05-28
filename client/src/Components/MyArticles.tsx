@@ -75,13 +75,14 @@ const MyArticles: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4 mx-4 sm:mx-6 lg:mx-8 pt-[144px]">
-                <p className="text-white text-lg sm:text-xl font-medium">Loading...</p>
+            <div className="w-full min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4 pt-[128px]">
+                <p className="text-white text-lg">Loading...</p>
             </div>
         );
     }
+
     return (
-        <div className="min-h-screen bg-gray-950 px-4 sm:px-6 lg:px-8 pt-[120px] pb-10">
+        <div className="min-h-screen bg-gray-950 px-4 sm:px-6 lg:px-8 pt-[140px] pb-10">
             <div className="max-w-6xl mx-auto">
                 {articles.length === 0 ? (
                     <p className="text-gray-400 text-base sm:text-lg text-center font-medium">
