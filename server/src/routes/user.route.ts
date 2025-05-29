@@ -52,7 +52,8 @@ userRoute.route("/:id/my-articles").get((req, res) => articleController.getMyArt
 userRoute
     .route("/:userId/articles/:articleId")
     .get((req, res) => articleController.getArticle(req, res))
-    .delete((req, res) => articleController.deleteArticle(req, res));
+    .delete((req, res) => articleController.deleteArticle(req, res))
+    .patch(upload.array("images", 2), (req, res) => articleController.updateArticle(req, res));
 
 userRoute
     .route("/:userId/articles/:articleId/block")

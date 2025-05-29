@@ -10,6 +10,7 @@ import UserProtected from "./Components/Protected/UserProtected";
 import AddArticlePage from "./Pages/AddArticle";
 import MyArticlesPage from "./Pages/MyArticles";
 import ArticleDetailsPage from "./Pages/ArticleDetails";
+import EditArticlePage from "./Pages/EditArticle";
 
 const App: React.FC = () => {
     return (
@@ -27,6 +28,7 @@ const App: React.FC = () => {
                         <Route path={`/add-article`} Component={AddArticlePage} />
                         <Route path={`/my-articles`} Component={MyArticlesPage} />
                         <Route path={`/view-article/:id`} Component={ArticleDetailsPage} />
+                        <Route path={`/edit-article/:id`} Component={EditArticlePage} />
                     </Route>
                 </Routes>
             </Router>

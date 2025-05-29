@@ -17,6 +17,8 @@ export const ProfileMessages = {
 export const ArticleMessages = {
     ARTICLE_CREATION_SUCCESS: "Created article successfully",
     ARTICLE_CREATION_FAILURE: "Failed to create article",
+    ARTICLE_UPDATE_SUCCESS: "Update article successfully",
+    ARTICLE_UPDATE_FAILURE: "Failed to update article",
     ARTICLE_FETCHING_SUCCESS: "Fetched articles successfully",
     ARTICLE_FETCHING_FAILURE: "Failed to fetch article",
     ARTICLE_BLOCKED: "Article blocked successfully",

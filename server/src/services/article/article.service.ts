@@ -110,7 +110,21 @@ class ArticleService implements IArticleService {
             return await this.articleRepository.updateDeleteArticle(articleId);
         } catch (error: any) {
             console.log(error.message);
-            throw new Error("Failed to block article");
+            throw new Error("Failed to delete article");
+        }
+    }
+
+    async updateArticle(articleId: string, data: IAddArticle): Promise<boolean> {
+        try {
+            let urls: string[] = [];
+            if (data.images.length > 0) {
+                urls = await uploadImages(data.images);
+            }
+
+            return await this.articleRepository.updateArticle(articleId, { ...data, images: urls });
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to update article");
         }
     }
 }

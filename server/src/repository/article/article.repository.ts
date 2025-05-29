@@ -14,10 +14,7 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
         try {
             await this.create({
                 account_id: new mongoose.Types.ObjectId(id),
-                article_name: data.article_name,
-                description: data.description,
-                category: data.category,
-                images: data.images,
+                ...data,
             } as IArticle);
         } catch (error: any) {
             console.log(error.message);
@@ -99,6 +96,11 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
                         },
                     },
                     {
+                        $sort: {
+                            createdAt: -1,
+                        },
+                    },
+                    {
                         $project: {
                             _id: 1,
                             account_id: 1,
@@ -138,6 +140,29 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
         } catch (error: any) {
             console.log(error.message);
             throw new Error("Failed to delete article");
+        }
+    }
+
+    async updateArticle(articleId: string, data: IUpdatedArticle): Promise<boolean> {
+        try {
+            let filteredData: {
+                article_name: string;
+                description: string;
+                category: string;
+                images?: string[];
+            } = {
+                article_name: data.article_name,
+                description: data.description,
+                category: data.category,
+            };
+
+            if (data.images.length > 0) {
+                filteredData.images = data.images;
+            }
+            return await this.update(articleId, filteredData);
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to update article");
         }
     }
 }

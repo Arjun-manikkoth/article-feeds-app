@@ -1,5 +1,5 @@
 import type { IChangePassword, IEditProfile, SignIn, SignUp } from "../Interfaces/userInterfaces";
-import type { IArticle } from "../Interfaces/article.interfaces";
+import type { IArticle, IUpdateArticle } from "../Interfaces/article.interfaces";
 import axiosUser from "../Axios/Interceptor";
 import { isAxiosError } from "axios";
 
@@ -159,9 +159,9 @@ const createArticleApi = async (id: string | null, data: IArticle) => {
                 formData.append("images", file);
             });
         }
-        console.log("call made");
+
         const response = await axiosUser.post(`/users/${id}/articles`, formData);
-        console.log("after call");
+
         return {
             success: true,
             message: response.data.message || "Article created successfully",
@@ -259,6 +259,46 @@ const fetchArticleByIdApi = async (userId: string, articleId: string) => {
             return {
                 success: false,
                 message: error.response?.data.message || "Failed to fetch articles",
+                data: error.response?.data.data,
+            };
+        } else {
+            console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
+        }
+    }
+};
+
+// update article data with id
+const updateArticleByIdApi = async (userId: string, articleId: string, data: IUpdateArticle) => {
+    try {
+        const formData = new FormData();
+        formData.append("articleName", data.articleName);
+        formData.append("description", data.description);
+        formData.append("category", data.category);
+
+        if (data.images) {
+            Array.from(data.images).forEach((file) => {
+                formData.append("images", file);
+            });
+        }
+
+        const response = await axiosUser.patch(`/users/${userId}/articles/${articleId}`, formData);
+
+        return {
+            success: true,
+            message: response.data.message || "Article updated successfully",
+            data: response.data.data,
+        };
+    } catch (error: unknown) {
+        if (isAxiosError(error)) {
+            console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to update articles",
                 data: error.response?.data.data,
             };
         } else {
@@ -372,4 +412,5 @@ export {
     fetchAllArticlesApi,
     blockArticleApi,
     deleteArticleApi,
+    updateArticleByIdApi,
 };

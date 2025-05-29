@@ -8,7 +8,6 @@ class ArticleController {
 
     async addArticle(req: Request, res: Response): Promise<void> {
         try {
-            console.log(req.body, "req.body");
             if (
                 !req.body.articleName ||
                 !req.body.description ||
@@ -222,6 +221,50 @@ class ArticleController {
                 res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                     success: false,
                     message: ArticleMessages.ARTICLE_DELETION_FAILED,
+                    data: null,
+                });
+            }
+        } catch (error: any) {
+            console.error(error.message);
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: GeneralMessages.INTERNAL_SERVER_ERROR,
+                data: null,
+            });
+        }
+    }
+
+    async updateArticle(req: Request, res: Response): Promise<void> {
+        try {
+            if (
+                !req.params.articleId ||
+                !req.body.articleName ||
+                !req.body.description ||
+                !req.body.category
+            ) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({
+                    success: false,
+                    message: GeneralMessages.MISSING_REQUIRED_FIELDS,
+                    data: null,
+                });
+                return;
+            }
+
+            const status = await this.articleService.updateArticle(req.params.articleId as string, {
+                ...req.body,
+                images: req.files as Express.Multer.File[],
+            });
+
+            if (status) {
+                res.status(HTTP_STATUS.OK).json({
+                    success: true,
+                    message: ArticleMessages.ARTICLE_UPDATE_SUCCESS,
+                    data: null,
+                });
+            } else {
+                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                    success: false,
+                    message: ArticleMessages.ARTICLE_UPDATE_FAILURE,
                     data: null,
                 });
             }

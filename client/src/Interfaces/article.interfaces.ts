@@ -9,4 +9,12 @@ interface IArticle {
     dislikesCount: number;
     blocksCount: number;
 }
-export type { IArticle };
+
+interface IUpdateArticle {
+    articleName: string;
+    description: string;
+    category: string;
+    images: FileList | File[];
+}
+
+export type { IArticle, IUpdateArticle };
