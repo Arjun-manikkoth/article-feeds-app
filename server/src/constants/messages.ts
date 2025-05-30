@@ -26,8 +26,11 @@ export const ArticleMessages = {
     ARTICLE_DELETED: "Article deleted successfully",
     ARTICLE_DELETION_FAILED: "Failed to delete article",
     ARTICLE_LIKED: "Article liked successfully",
+    ARTICLE_DISLIKED: "Article disliked successfully",
     ARTICLE_ALREADY_LIKED: "Article already liked article",
     ARTICLE_LIKING_FAILED: "Article liking failed",
+    ARTICLE_ALREADY_DISLIKED: "Article already disliked article",
+    ARTICLE_DISLIKING_FAILED: "Article disliking failed",
 };
 
 export const PasswordMessages = {

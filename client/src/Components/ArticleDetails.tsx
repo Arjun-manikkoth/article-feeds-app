@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { FaHeart, FaThumbsDown, FaBan } from "react-icons/fa";
 import { fetchArticleByIdApi } from "../Api/userApi";
 import { useAuth } from "../Hooks/useAuth";
-import { blockArticleApi, likeArticleApi } from "../Api/userApi";
+import { blockArticleApi, likeArticleApi, dislikeArticleApi } from "../Api/userApi";
 import type { IArticleDetails } from "../Interfaces/article.interfaces";
 import { useAppHelpers } from "../Hooks/useAppHelpers";
 
@@ -55,7 +55,6 @@ const ArticleDetails: React.FC = () => {
             toast.error("Error blocking article");
         }
     };
-    //stopped at like article
 
     const likeArticle = async (articleId: string) => {
         try {
@@ -65,6 +64,7 @@ const ArticleDetails: React.FC = () => {
                 if (status.success) {
                     setArticle((prev) => {
                         if (!prev) return prev;
+                        toast.success("You have reacted");
                         if (article?.isDisliked) {
                             return {
                                 ...prev,
@@ -78,6 +78,38 @@ const ArticleDetails: React.FC = () => {
                                 ...prev,
                                 likesCount: prev.likesCount + 1,
                                 isLiked: true,
+                            };
+                        }
+                    });
+                }
+            }
+        } catch (err: any) {
+            toast.error("Error liking article");
+        }
+    };
+
+    const dislikeArticle = async (articleId: string) => {
+        try {
+            if (userId && articleId) {
+                const status = await dislikeArticleApi(userId, articleId);
+
+                if (status.success) {
+                    setArticle((prev) => {
+                        if (!prev) return prev;
+                        toast.success("You have reacted");
+                        if (article?.isLiked) {
+                            return {
+                                ...prev,
+                                likesCount: prev.likesCount - 1,
+                                isDisliked: true,
+                                isLiked: false,
+                                dislikesCount: prev.dislikesCount + 1,
+                            };
+                        } else {
+                            return {
+                                ...prev,
+                                dislikeCount: prev.dislikesCount + 1,
+                                isDisliked: true,
                             };
                         }
                     });
@@ -130,7 +162,10 @@ const ArticleDetails: React.FC = () => {
                             <FaHeart className="text-amber-500" />
                             {article.likesCount} Likes
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div
+                            className="flex items-center gap-1"
+                            onClick={() => dislikeArticle(article.id)}
+                        >
                             <FaThumbsDown className="text-amber-500" />
                             {article.dislikesCount} Dislikes
                         </div>

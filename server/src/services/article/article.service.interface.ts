@@ -9,6 +9,10 @@ export default interface IArticleService {
     fetchAllArticles(id: string): Promise<IArticle[] | []>;
     blockArticle(userId: string, articleId: string): Promise<boolean>;
     deleteArticle(articleId: string): Promise<boolean>;
-    likeArticle(userId: string, articleId: string): Promise<IGeneralResponse>;
+    reactToArticle(
+        userId: string,
+        articleId: string,
+        reactionType: "like" | "dislike"
+    ): Promise<IGeneralResponse>;
     updateArticle(articleId: string, data: IAddArticle): Promise<boolean>;
 }

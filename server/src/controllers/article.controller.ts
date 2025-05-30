@@ -280,10 +280,21 @@ class ArticleController {
             });
         }
     }
-
     async likeArticle(req: Request, res: Response): Promise<void> {
+        await this.reactToArticle(req, res, "like");
+    }
+
+    async dislikeArticle(req: Request, res: Response): Promise<void> {
+        await this.reactToArticle(req, res, "dislike");
+    }
+
+    async reactToArticle(
+        req: Request,
+        res: Response,
+        reactionType: "like" | "dislike"
+    ): Promise<void> {
         try {
-            if (!req.params.userId || !req.params.articleId) {
+            if (!req.params.userId || !req.params.articleId || !reactionType) {
                 res.status(HTTP_STATUS.BAD_REQUEST).json({
                     success: false,
                     message: GeneralMessages.MISSING_REQUIRED_FIELDS,
@@ -292,15 +303,16 @@ class ArticleController {
                 return;
             }
 
-            const status = await this.articleService.likeArticle(
+            const status = await this.articleService.reactToArticle(
                 req.params.userId,
-                req.params.articleId
+                req.params.articleId,
+                reactionType
             );
 
             if (status.statusCode === HTTP_STATUS.OK) {
                 res.status(HTTP_STATUS.OK).json({
                     success: true,
-                    message: ArticleMessages.ARTICLE_LIKED,
+                    message: status.message,
                     data: null,
                 });
             } else {

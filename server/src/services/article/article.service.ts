@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import mongoose from "mongoose";
 import IArticleService from "./article.service.interface";
 import IArticleRepository from "../../repository/article/article.repository.interface";
@@ -116,7 +115,11 @@ class ArticleService implements IArticleService {
         }
     }
 
-    async likeArticle(userId: string, articleId: string): Promise<IGeneralResponse> {
+    async reactToArticle(
+        userId: string,
+        articleId: string,
+        reactionType: "like" | "dislike"
+    ): Promise<IGeneralResponse> {
         try {
             const data = await this.articleRepository.getArticleById(articleId);
             if (!data) {
@@ -126,34 +129,42 @@ class ArticleService implements IArticleService {
                     data: null,
                 };
             }
-            console.log(data, "data");
-            const userObjectId = new mongoose.Types.ObjectId(userId);
-            const isLiked = data?.likes?.includes(userObjectId) || false;
-            const isDisliked = data?.dislikes?.includes(userObjectId) || false;
-            console.log(
-                data?.likes?.includes(userObjectId),
-                data?.dislikes?.includes(userObjectId),
-                "liked",
-                "disliked"
-            );
 
-            if (isLiked) {
+            const userObjectId = new mongoose.Types.ObjectId(userId);
+            const isLiked = data?.likes?.includes(userObjectId) || false; //check whether the user has already liked
+            const isDisliked = data?.dislikes?.includes(userObjectId) || false; //checks whether the user has already disliked
+
+            if (
+                (reactionType === "like" && isLiked) ||
+                (reactionType === "dislike" && isDisliked)
+            ) {
                 return {
                     statusCode: HTTP_STATUS.CONFLICT,
-                    message: ArticleMessages.ARTICLE_ALREADY_LIKED,
-                    data: null,
-                };
-            } else {
-                await this.articleRepository.likeArticle(userId, articleId, isDisliked);
-                return {
-                    statusCode: HTTP_STATUS.OK,
-                    message: ArticleMessages.ARTICLE_LIKED,
+                    message:
+                        reactionType === "like"
+                            ? ArticleMessages.ARTICLE_ALREADY_LIKED
+                            : ArticleMessages.ARTICLE_ALREADY_DISLIKED,
                     data: null,
                 };
             }
+
+            await this.articleRepository.reactToArticle(
+                userId,
+                articleId,
+                reactionType,
+                reactionType === "like" ? isDisliked : isLiked
+            );
+            return {
+                statusCode: HTTP_STATUS.OK,
+                message:
+                    reactionType === "like"
+                        ? ArticleMessages.ARTICLE_LIKED
+                        : ArticleMessages.ARTICLE_DISLIKED,
+                data: null,
+            };
         } catch (error: any) {
             console.log(error.message);
-            throw new Error("Failed to like article");
+            throw new Error(`Failed to ${reactionType} article`);
         }
     }
 

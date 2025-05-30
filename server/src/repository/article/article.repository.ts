@@ -156,20 +156,34 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
         }
     }
 
-    async likeArticle(userId: string, articleId: string, disliked: boolean): Promise<boolean> {
+    async reactToArticle(
+        userId: string,
+        articleId: string,
+        reaction: "like" | "dislike",
+        undoOther: boolean
+    ): Promise<boolean> {
         try {
-            const status = await this.model.updateOne(
-                { _id: articleId },
-                {
-                    $addToSet: { likes: new mongoose.Types.ObjectId(userId) },
-                    ...(disliked && { $pull: { dislikes: new mongoose.Types.ObjectId(userId) } }),
-                }
-            );
+            const updateQuery: any = {
+                $addToSet: {
+                    [reaction === "like" ? "likes" : "dislikes"]: new mongoose.Types.ObjectId(
+                        userId
+                    ),
+                },
+            };
 
-            return status.modifiedCount > 0 ? true : false;
+            if (undoOther) {
+                updateQuery.$pull = {
+                    [reaction === "like" ? "dislikes" : "likes"]: new mongoose.Types.ObjectId(
+                        userId
+                    ),
+                };
+            }
+
+            const status = await this.model.updateOne({ _id: articleId }, updateQuery);
+            return status.modifiedCount > 0;
         } catch (error: any) {
             console.log(error.message);
-            throw new Error("Failed to delete article");
+            throw new Error(`Failed to ${reaction} article`);
         }
     }
 

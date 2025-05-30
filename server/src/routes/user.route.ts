@@ -63,4 +63,8 @@ userRoute
     .route("/:userId/articles/:articleId/like")
     .patch((req, res) => articleController.likeArticle(req, res));
 
+userRoute
+    .route("/:userId/articles/:articleId/dislike")
+    .patch((req, res) => articleController.dislikeArticle(req, res));
+
 export default userRoute;
