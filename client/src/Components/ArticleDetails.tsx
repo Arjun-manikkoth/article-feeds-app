@@ -65,11 +65,21 @@ const ArticleDetails: React.FC = () => {
                 if (status.success) {
                     setArticle((prev) => {
                         if (!prev) return prev;
-                        return {
-                            ...prev,
-                            likesCount: prev.likesCount + 1,
-                            dislikesCount: prev.dislikesCount - 1,
-                        };
+                        if (article?.isDisliked) {
+                            return {
+                                ...prev,
+                                likesCount: prev.likesCount + 1,
+                                isLiked: true,
+                                isDisliked: false,
+                                dislikesCount: prev.dislikesCount - 1,
+                            };
+                        } else {
+                            return {
+                                ...prev,
+                                likesCount: prev.likesCount + 1,
+                                isLiked: true,
+                            };
+                        }
                     });
                 }
             }
