@@ -59,4 +59,8 @@ userRoute
     .route("/:userId/articles/:articleId/block")
     .patch((req, res) => articleController.blockArticle(req, res));
 
+userRoute
+    .route("/:userId/articles/:articleId/like")
+    .patch((req, res) => articleController.likeArticle(req, res));
+
 export default userRoute;

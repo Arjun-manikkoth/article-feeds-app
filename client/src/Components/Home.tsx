@@ -24,7 +24,7 @@ const Home: React.FC = () => {
                         toast.error("Failed to load feed");
                     }
                 }
-            } catch (err) {
+            } catch (err: any) {
                 toast.error("Error loading feed");
             } finally {
                 setLoading(false);
@@ -35,10 +35,9 @@ const Home: React.FC = () => {
 
     const blockArticle = async (articleId: string) => {
         try {
-            console.log("block article triggered");
             if (userId && articleId) {
                 const status = await blockArticleApi(userId, articleId);
-                console.log(status, "status");
+
                 if (status.success) {
                     toast.success("We will not show that article again");
                     setArticles((prev) => prev.filter((article) => article.id !== articleId));
@@ -46,7 +45,7 @@ const Home: React.FC = () => {
                     toast.error("Failed to block article");
                 }
             }
-        } catch (err) {
+        } catch (err: any) {
             toast.error("Error blocking article");
         }
     };

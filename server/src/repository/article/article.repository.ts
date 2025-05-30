@@ -40,7 +40,7 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
                             category: 1,
                             images: 1,
                             likesCount: { $size: "$likes" },
-                            dislikeCount: { $size: "$dislikes" },
+                            dislikesCount: { $size: "$dislikes" },
                             blockCount: { $size: "$blocks" },
                         },
                     },
@@ -54,11 +54,22 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
 
     async getArticleById(id: string): Promise<IArticle | null> {
         try {
+            const result = await this.findById(id);
+
+            return result || null;
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to fetch article");
+        }
+    }
+
+    async getAggregatedArticleById(userId: string, articleId: string): Promise<IArticle | null> {
+        try {
             const result = await this.model
                 .aggregate([
                     {
                         $match: {
-                            _id: new mongoose.Types.ObjectId(id),
+                            _id: new mongoose.Types.ObjectId(articleId),
                         },
                     },
                     {
@@ -70,8 +81,10 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
                             category: 1,
                             images: 1,
                             likesCount: { $size: "$likes" },
-                            dislikeCount: { $size: "$dislikes" },
+                            dislikesCount: { $size: "$dislikes" },
                             blockCount: { $size: "$blocks" },
+                            isLiked: { $in: [new mongoose.Types.ObjectId(userId), "$likes"] },
+                            isDisliked: { $in: [new mongoose.Types.ObjectId(userId), "$dislikes"] },
                         },
                     },
                 ])
@@ -80,7 +93,7 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
             return result[0] || null;
         } catch (error: any) {
             console.log(error.message);
-            throw new Error("Failed to fetch article");
+            throw new Error("Failed to fetch aggregated article");
         }
     }
 
@@ -109,7 +122,7 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
                             category: 1,
                             images: 1,
                             likesCount: { $size: "$likes" },
-                            dislikeCount: { $size: "$dislikes" },
+                            dislikesCount: { $size: "$dislikes" },
                             blockCount: { $size: "$blocks" },
                         },
                     },
@@ -137,6 +150,23 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
     async updateDeleteArticle(articleId: string): Promise<boolean> {
         try {
             return await this.update(articleId, { is_deleted: true });
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to delete article");
+        }
+    }
+
+    async likeArticle(userId: string, articleId: string, disliked: boolean): Promise<boolean> {
+        try {
+            const status = await this.model.updateOne(
+                { _id: articleId },
+                {
+                    $addToSet: { likes: new mongoose.Types.ObjectId(userId) },
+                    ...(disliked && { $pull: { dislikes: new mongoose.Types.ObjectId(userId) } }),
+                }
+            );
+
+            return status.modifiedCount > 0 ? true : false;
         } catch (error: any) {
             console.log(error.message);
             throw new Error("Failed to delete article");

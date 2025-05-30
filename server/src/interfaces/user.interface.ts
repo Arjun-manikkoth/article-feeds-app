@@ -1,4 +1,3 @@
-import { IChangePassword } from "./../../../client/src/Interfaces/userInterfaces";
 interface IServiceResponse {
     message: string;
     statusCode: number;

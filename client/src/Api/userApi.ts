@@ -399,6 +399,35 @@ const deleteArticleApi = async (userId: string, articleId: string) => {
     }
 };
 
+// like article
+const likeArticleApi = async (userId: string, articleId: string) => {
+    try {
+        const response = await axiosUser.patch(`/users/${userId}/articles/${articleId}/like`);
+
+        return {
+            success: true,
+            message: response.data.message || "Article marked liked successfully",
+            data: response.data.data,
+        };
+    } catch (error: unknown) {
+        if (isAxiosError(error)) {
+            console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to mark article liked",
+                data: error.response?.data.data,
+            };
+        } else {
+            console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
+        }
+    }
+};
+
 export {
     signUpApi,
     signInApi,
@@ -413,4 +442,5 @@ export {
     blockArticleApi,
     deleteArticleApi,
     updateArticleByIdApi,
+    likeArticleApi,
 };

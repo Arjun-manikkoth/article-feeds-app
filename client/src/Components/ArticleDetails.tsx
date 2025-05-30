@@ -4,14 +4,14 @@ import toast from "react-hot-toast";
 import { FaHeart, FaThumbsDown, FaBan } from "react-icons/fa";
 import { fetchArticleByIdApi } from "../Api/userApi";
 import { useAuth } from "../Hooks/useAuth";
-import { blockArticleApi } from "../Api/userApi";
-import type { IArticle } from "../Interfaces/article.interfaces";
+import { blockArticleApi, likeArticleApi } from "../Api/userApi";
+import type { IArticleDetails } from "../Interfaces/article.interfaces";
 import { useAppHelpers } from "../Hooks/useAppHelpers";
 
 const ArticleDetails: React.FC = () => {
     const { id: articleId } = useParams<{ id: string }>();
     const { id: userId } = useAuth();
-    const [article, setArticle] = useState<IArticle | null>(null);
+    const [article, setArticle] = useState<IArticleDetails | null>(null);
     const [isLoading, setLoading] = useState(false);
     const { navigate } = useAppHelpers();
 
@@ -55,6 +55,28 @@ const ArticleDetails: React.FC = () => {
             toast.error("Error blocking article");
         }
     };
+    //stopped at like article
+
+    const likeArticle = async (articleId: string) => {
+        try {
+            if (userId && articleId) {
+                const status = await likeArticleApi(userId, articleId);
+
+                if (status.success) {
+                    setArticle((prev) => {
+                        if (!prev) return prev;
+                        return {
+                            ...prev,
+                            likesCount: prev.likesCount + 1,
+                            dislikesCount: prev.dislikesCount - 1,
+                        };
+                    });
+                }
+            }
+        } catch (err: any) {
+            toast.error("Error liking article");
+        }
+    };
 
     if (isLoading) {
         return (
@@ -91,7 +113,10 @@ const ArticleDetails: React.FC = () => {
                         {article.category[0] || "Uncategorized"}
                     </span>
                     <div className="flex gap-6 text-sm text-gray-400 pt-4">
-                        <div className="flex items-center gap-1">
+                        <div
+                            className="flex items-center gap-1"
+                            onClick={() => likeArticle(article.id)}
+                        >
                             <FaHeart className="text-amber-500" />
                             {article.likesCount} Likes
                         </div>
@@ -104,7 +129,7 @@ const ArticleDetails: React.FC = () => {
                             onClick={() => blockArticle(article.id)}
                         >
                             <FaBan className="text-amber-500" />
-                            Not Intrested
+                            Not Interested
                         </div>
                     </div>
                 </div>

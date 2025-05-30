@@ -10,6 +10,11 @@ interface IArticle {
     blocksCount: number;
 }
 
+interface IArticleDetails extends IArticle {
+    isLiked: boolean;
+    isDisliked: boolean;
+}
+
 interface IUpdateArticle {
     articleName: string;
     description: string;
@@ -17,4 +22,4 @@ interface IUpdateArticle {
     images: FileList | File[];
 }
 
-export type { IArticle, IUpdateArticle };
+export type { IArticle, IUpdateArticle, IArticleDetails };

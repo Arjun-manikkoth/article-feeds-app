@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+import mongoose from "mongoose";
 import IArticleService from "./article.service.interface";
 import IArticleRepository from "../../repository/article/article.repository.interface";
 import { IAddArticle } from "../../interfaces/article.interface";
@@ -58,9 +60,9 @@ class ArticleService implements IArticleService {
         }
     }
     //fetch article with article Id
-    async getArticle(id: string): Promise<IArticle | null> {
+    async getArticle(userId: string, articleId: string): Promise<IArticle | null> {
         try {
-            const data = await this.articleRepository.getArticleById(id);
+            const data = await this.articleRepository.getAggregatedArticleById(userId, articleId);
 
             if (data) {
                 return mapKeys(data, (value, key) => camelCase(key)) as IArticle;
@@ -111,6 +113,47 @@ class ArticleService implements IArticleService {
         } catch (error: any) {
             console.log(error.message);
             throw new Error("Failed to delete article");
+        }
+    }
+
+    async likeArticle(userId: string, articleId: string): Promise<IGeneralResponse> {
+        try {
+            const data = await this.articleRepository.getArticleById(articleId);
+            if (!data) {
+                return {
+                    statusCode: HTTP_STATUS.NOT_FOUND,
+                    message: ArticleMessages.ARTICLE_FETCHING_FAILURE,
+                    data: null,
+                };
+            }
+            console.log(data, "data");
+            const userObjectId = new mongoose.Types.ObjectId(userId);
+            const isLiked = data?.likes?.includes(userObjectId) || false;
+            const isDisliked = data?.dislikes?.includes(userObjectId) || false;
+            console.log(
+                data?.likes?.includes(userObjectId),
+                data?.dislikes?.includes(userObjectId),
+                "liked",
+                "disliked"
+            );
+
+            if (isLiked) {
+                return {
+                    statusCode: HTTP_STATUS.CONFLICT,
+                    message: ArticleMessages.ARTICLE_ALREADY_LIKED,
+                    data: null,
+                };
+            } else {
+                await this.articleRepository.likeArticle(userId, articleId, isDisliked);
+                return {
+                    statusCode: HTTP_STATUS.OK,
+                    message: ArticleMessages.ARTICLE_LIKED,
+                    data: null,
+                };
+            }
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to like article");
         }
     }
 

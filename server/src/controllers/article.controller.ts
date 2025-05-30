@@ -23,7 +23,7 @@ class ArticleController {
                 return;
             }
 
-            const response = await this.articleService.createArticle(req.params.id as string, {
+            const response = await this.articleService.createArticle(req.params.id, {
                 article_name: req.body.articleName,
                 description: req.body.description,
                 category: req.body.category,
@@ -63,7 +63,7 @@ class ArticleController {
                 return;
             }
 
-            const response = await this.articleService.getArticles(req.params.id as string);
+            const response = await this.articleService.getArticles(req.params.id);
 
             if (response?.length) {
                 res.status(HTTP_STATUS.OK).json({
@@ -90,7 +90,7 @@ class ArticleController {
 
     async getArticle(req: Request, res: Response): Promise<void> {
         try {
-            if (!req.params.articleId) {
+            if (!req.params.articleId || !req.params.userId) {
                 res.status(HTTP_STATUS.BAD_REQUEST).json({
                     success: false,
                     message: GeneralMessages.MISSING_REQUIRED_FIELDS,
@@ -99,7 +99,10 @@ class ArticleController {
                 return;
             }
 
-            const response = await this.articleService.getArticle(req.params.articleId as string);
+            const response = await this.articleService.getArticle(
+                req.params.userId,
+                req.params.articleId
+            );
 
             if (response) {
                 res.status(HTTP_STATUS.OK).json({
@@ -134,7 +137,7 @@ class ArticleController {
                 return;
             }
 
-            const response = await this.articleService.fetchAllArticles(req.params.id as string);
+            const response = await this.articleService.fetchAllArticles(req.params.id);
 
             if (response.length) {
                 res.status(HTTP_STATUS.OK).json({
@@ -171,8 +174,8 @@ class ArticleController {
             }
 
             const status = await this.articleService.blockArticle(
-                req.params.userId as string,
-                req.params.articleId as string
+                req.params.userId,
+                req.params.articleId
             );
 
             if (status) {
@@ -209,7 +212,7 @@ class ArticleController {
                 return;
             }
 
-            const status = await this.articleService.deleteArticle(req.params.articleId as string);
+            const status = await this.articleService.deleteArticle(req.params.articleId);
 
             if (status) {
                 res.status(HTTP_STATUS.OK).json({
@@ -250,7 +253,7 @@ class ArticleController {
                 return;
             }
 
-            const status = await this.articleService.updateArticle(req.params.articleId as string, {
+            const status = await this.articleService.updateArticle(req.params.articleId, {
                 ...req.body,
                 images: req.files as Express.Multer.File[],
             });
@@ -265,6 +268,45 @@ class ArticleController {
                 res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                     success: false,
                     message: ArticleMessages.ARTICLE_UPDATE_FAILURE,
+                    data: null,
+                });
+            }
+        } catch (error: any) {
+            console.error(error.message);
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: GeneralMessages.INTERNAL_SERVER_ERROR,
+                data: null,
+            });
+        }
+    }
+
+    async likeArticle(req: Request, res: Response): Promise<void> {
+        try {
+            if (!req.params.userId || !req.params.articleId) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({
+                    success: false,
+                    message: GeneralMessages.MISSING_REQUIRED_FIELDS,
+                    data: null,
+                });
+                return;
+            }
+
+            const status = await this.articleService.likeArticle(
+                req.params.userId,
+                req.params.articleId
+            );
+
+            if (status.statusCode === HTTP_STATUS.OK) {
+                res.status(HTTP_STATUS.OK).json({
+                    success: true,
+                    message: ArticleMessages.ARTICLE_LIKED,
+                    data: null,
+                });
+            } else {
+                res.status(status.statusCode).json({
+                    success: false,
+                    message: status.message,
                     data: null,
                 });
             }

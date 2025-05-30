@@ -176,7 +176,7 @@ class UserController {
                 return;
             }
 
-            const status = await this.userService.getUserData(req.params.id as string);
+            const status = await this.userService.getUserData(req.params.id);
 
             if (status) {
                 res.status(HTTP_STATUS.OK).json({
@@ -257,7 +257,7 @@ class UserController {
                 return;
             }
 
-            const response = await this.userService.changePassword(req.params.id as string, {
+            const response = await this.userService.changePassword(req.params.id, {
                 password: req.body.currentPassword,
                 newPassword: req.body.newPassword,
             });
