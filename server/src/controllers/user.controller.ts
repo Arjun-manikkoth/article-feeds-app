@@ -1,7 +1,12 @@
 import { HTTP_STATUS } from "./../constants/status.code";
 import { Request, Response } from "express";
 import IUserService from "../services/user/user.service.interface";
-import { AuthMessages, GeneralMessages, ProfileMessages } from "../constants/messages";
+import {
+    AuthMessages,
+    GeneralMessages,
+    ProfileMessages,
+    TokenMessages,
+} from "../constants/messages";
 import { validateLoginId } from "../utils/regex.check";
 import { mapKeys, snakeCase } from "lodash-es";
 import { IEditProfile } from "../interfaces/user.interface";
@@ -155,6 +160,54 @@ class UserController {
                 message: AuthMessages.SIGN_OUT_SUCCESS,
                 data: null,
             });
+        } catch (error: any) {
+            console.error(error.message);
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: GeneralMessages.INTERNAL_SERVER_ERROR,
+                data: null,
+            });
+        }
+    }
+
+    // Refresh token logic
+    async refreshToken(req: Request, res: Response): Promise<void> {
+        try {
+            const token = req.cookies.refreshToken;
+
+            if (!token) {
+                res.status(HTTP_STATUS.UNAUTHORIZED).json({
+                    success: false,
+                    message: TokenMessages.REFRESH_TOKEN_MISSING,
+                    data: null,
+                });
+                return;
+            }
+
+            const response = await this.userService.refreshTokenCheck(token);
+
+            if (response.statusCode === HTTP_STATUS.OK) {
+                res.status(HTTP_STATUS.OK)
+                    .cookie("accessToken", response.accessToken, {
+                        httpOnly: true,
+                        secure: false,
+                        //sameSite: "none",
+                        maxAge: process.env.MAX_AGE_ACCESS_COOKIE
+                            ? parseInt(process.env.MAX_AGE_ACCESS_COOKIE)
+                            : 15 * 60 * 1000, // 15 minutes
+                    })
+                    .json({
+                        success: true,
+                        message: TokenMessages.ACCESS_TOKEN_SUCCESS,
+                        data: null,
+                    });
+            } else {
+                res.status(HTTP_STATUS.UNAUTHORIZED).json({
+                    success: false,
+                    message: response.message,
+                    data: null,
+                });
+            }
         } catch (error: any) {
             console.error(error.message);
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({

@@ -44,3 +44,15 @@ export const GeneralMessages = {
     MISSING_REQUIRED_FIELDS: "Some fields are missing or invalid",
     INTERNAL_SERVER_ERROR: "Internal server error",
 };
+
+export const TokenMessages = {
+    REFRESH_TOKEN_MISSING: "Refresh token missing",
+    ACCESS_TOKEN_SUCCESS: "Access token sent successfully",
+};
+
+export const AccessTokenMessages = {
+    ACCESS_TOKEN_MISSING: "Access token is missing",
+    ACCESS_TOKEN_EXPIRED: "Unauthorized! access token is expired",
+    ACCESS_TOKEN_INVALID: "Unauthorized! access token is invalid",
+    ACCESS_TOKEN_VERIFICATION_FAILED: "Unauthorized! token verification failed",
+};

@@ -7,16 +7,17 @@ import {
     IEditProfile,
     IPasswordChange,
     IGeneralResponse,
+    IRefreshTokenResponse,
 } from "../../interfaces/user.interface";
 import { IUser } from "../../models/user.model";
 import IUserRepository from "../../repository/user/user.repository.interface";
 import { hashPassword, comparePasswords } from "../../utils/hash.password";
 import { generateTokens } from "../../utils/generate.tokens";
+import { verifyToken } from "../../utils/verify.token";
 import { AuthMessages, PasswordMessages, ProfileMessages } from "../../constants/messages";
 import { HTTP_STATUS } from "../../constants/status.code";
 import { isEmail } from "../../utils/regex.check";
 import { camelCase, mapKeys } from "lodash-es";
-import { uploadImages } from "../../utils/cloudinary";
 
 class UserService implements IUserService {
     constructor(private userRepository: IUserRepository) {}
@@ -94,6 +95,30 @@ class UserService implements IUserService {
         } catch (error: any) {
             console.log(error.message);
             throw new Error("Failed to sign in");
+        }
+    }
+
+    async refreshTokenCheck(token: string): Promise<IRefreshTokenResponse> {
+        try {
+            const tokenStatus = await verifyToken(token);
+
+            if (tokenStatus.id && tokenStatus.email && tokenStatus.role) {
+                const tokens = generateTokens(tokenStatus.id, tokenStatus.email, tokenStatus.role);
+                return {
+                    statusCode: HTTP_STATUS.OK,
+                    accessToken: tokens.accessToken,
+                    message: tokenStatus.message,
+                };
+            }
+
+            return {
+                statusCode: HTTP_STATUS.UNAUTHORIZED,
+                accessToken: null,
+                message: tokenStatus.message,
+            };
+        } catch (error: any) {
+            console.log(error.message);
+            throw new Error("Failed to create refresh token");
         }
     }
 

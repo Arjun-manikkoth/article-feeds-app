@@ -457,6 +457,33 @@ const dislikeArticleApi = async (userId: string, articleId: string) => {
     }
 };
 
+const refreshTokenApi = async () => {
+    try {
+        const response = await axiosUser.post("/users/refresh-token");
+        return {
+            success: true,
+            message: response.data.message,
+            data: null,
+        };
+    } catch (error: unknown) {
+        if (isAxiosError(error)) {
+            console.log(error.message);
+            return {
+                success: false,
+                message: error.response?.data.message || "Failed to refresh token",
+                data: error.response?.data.data,
+            };
+        } else {
+            console.log("An unknown error occurred");
+            return {
+                success: false,
+                message: "An unknown error occurred",
+                data: null,
+            };
+        }
+    }
+};
+
 export {
     signUpApi,
     signInApi,
@@ -473,4 +500,5 @@ export {
     updateArticleByIdApi,
     likeArticleApi,
     dislikeArticleApi,
+    refreshTokenApi,
 };

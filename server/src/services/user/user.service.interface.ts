@@ -6,6 +6,7 @@ import {
     IEditProfile,
     IPasswordChange,
     IGeneralResponse,
+    IRefreshTokenResponse,
 } from "../../interfaces/user.interface";
 import { IUser } from "../../models/user.model";
 
@@ -14,5 +15,6 @@ export default interface IUserService {
     authenticateUser(userData: ISignIn): Promise<ISignInResponse>;
     getUserData(id: string): Promise<Partial<IUser> | null>;
     editProfile(id: string, data: IEditProfile): Promise<boolean>;
+    refreshTokenCheck(token: string): Promise<IRefreshTokenResponse>;
     changePassword(id: string, data: IPasswordChange): Promise<IGeneralResponse>;
 }

@@ -1,14 +1,3 @@
-interface IServiceResponse {
-    message: string;
-    statusCode: number;
-}
-
-interface IEditProfile {
-    first_name: string;
-    last_name: string;
-    preference: string[];
-}
-
 interface ISignUp {
     firstName: string;
     lastName: string;
@@ -24,6 +13,33 @@ interface ISignIn {
     password: string;
 }
 
+interface IPasswordChange {
+    password: string;
+    newPassword: string;
+}
+
+interface IVerifyTokenResponse {
+    id: string | null;
+    email: string | null;
+    role: string | null;
+    message: string;
+}
+
+interface IEditProfile {
+    first_name: string;
+    last_name: string;
+    preference: string[];
+}
+
+interface IServiceResponse {
+    message: string;
+    statusCode: number;
+}
+
+interface IRefreshTokenResponse extends IServiceResponse {
+    accessToken: null | string;
+}
+
 interface ISignInResponse extends IServiceResponse {
     data: null | { accessToken: string; refreshToken: string; id: string };
 }
@@ -35,11 +51,6 @@ interface IGeneralResponse extends IServiceResponse {
     data: null;
 }
 
-interface IPasswordChange {
-    password: string;
-    newPassword: string;
-}
-
 export {
     ISignUp,
     ISignIn,
@@ -48,4 +59,6 @@ export {
     IEditProfile,
     IPasswordChange,
     IGeneralResponse,
+    IVerifyTokenResponse,
+    IRefreshTokenResponse,
 };
