@@ -9,6 +9,12 @@ interface IArticle {
     dislikesCount: number;
     blocksCount: number;
 }
+export interface ICreateArticle {
+    articleName: string;
+    description: string;
+    category: string;
+    images: File[];
+}
 
 interface IArticleDetails extends IArticle {
     isLiked: boolean;

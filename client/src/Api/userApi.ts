@@ -1,5 +1,5 @@
 import type { IChangePassword, IEditProfile, SignIn, SignUp } from "../Interfaces/userInterfaces";
-import type { IArticle, IUpdateArticle } from "../Interfaces/article.interfaces";
+import type { ICreateArticle, IUpdateArticle } from "../Interfaces/article.interfaces";
 import axiosUser from "../Axios/Interceptor";
 import { isAxiosError } from "axios";
 
@@ -147,7 +147,7 @@ const updatePasswordApi = async (id: string | null, data: IChangePassword) => {
 };
 
 // created an article
-const createArticleApi = async (id: string | null, data: IArticle) => {
+const createArticleApi = async (id: string | null, data: ICreateArticle) => {
     try {
         const formData = new FormData();
         formData.append("articleName", data.articleName);

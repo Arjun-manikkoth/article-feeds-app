@@ -1,4 +1,3 @@
-import { IUser } from "./userInterfaces";
 interface SignUp {
     email: string;
     firstName: string;
@@ -36,4 +35,4 @@ export interface IChangePassword {
     newPassword: string;
 }
 
-export type { SignUp, SignIn, IUser };
+export type { SignUp, SignIn };
