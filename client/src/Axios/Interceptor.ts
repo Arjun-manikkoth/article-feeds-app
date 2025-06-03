@@ -2,7 +2,7 @@ import axios from "axios";
 import { logoutApi, refreshTokenApi } from "../Api/userApi";
 import { baseUrl } from "../Constants/constant";
 import { store } from "../Redux/store";
-import { clearUser } from "../Redux/Slices/userSlice";
+import { clearUser } from "../Redux/Slices/UserSlice";
 
 const instance = axios.create({
     baseURL: `${baseUrl}`,
