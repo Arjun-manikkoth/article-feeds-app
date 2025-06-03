@@ -88,6 +88,38 @@ const ArticleDetails: React.FC = () => {
         }
     };
 
+    const dislikeArticle = async (articleId: string) => {
+        try {
+            if (userId && articleId) {
+                const status = await dislikeArticleApi(userId, articleId);
+
+                if (status.success) {
+                    setArticle((prev) => {
+                        if (!prev) return prev;
+                        toast.success("You have reacted");
+                        if (article?.isLiked) {
+                            return {
+                                ...prev,
+                                likesCount: prev.likesCount - 1,
+                                isDisliked: true,
+                                isLiked: false,
+                                dislikesCount: prev.dislikesCount + 1,
+                            };
+                        } else {
+                            return {
+                                ...prev,
+                                dislikeCount: prev.dislikesCount + 1,
+                                isDisliked: true,
+                            };
+                        }
+                    });
+                }
+            }
+        } catch (err: any) {
+            toast.error("Error liking article");
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="w-full min-h-screen flex justify-center items-center pt-[128px] bg-gray-950 text-white">
