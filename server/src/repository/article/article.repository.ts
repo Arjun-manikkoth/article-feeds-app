@@ -29,6 +29,7 @@ class ArticleRepository extends BaseRepository<IArticle> implements IArticleRepo
                     {
                         $match: {
                             account_id: new mongoose.Types.ObjectId(id),
+                            is_deleted: false,
                         },
                     },
                     {

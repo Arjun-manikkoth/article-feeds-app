@@ -38,6 +38,7 @@ class ArticleRepository extends base_repository_1.BaseRepository {
                     {
                         $match: {
                             account_id: new mongoose_1.default.Types.ObjectId(id),
+                            is_deleted: false,
                         },
                     },
                     {
